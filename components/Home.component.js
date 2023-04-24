@@ -8,7 +8,7 @@ import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // test firebase
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "../firebaseConfig";
 
@@ -129,6 +129,24 @@ const HomeComponent = props => {
                     });
                 }}>
                 <Text style={{color: "rgb(255, 238, 0)"}}>Sign me up!</Text>
+              </Button>
+            </Col>
+            <Col>
+              <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}
+                onPress={() => {
+                  console.log("Logging In!");
+                  signInWithEmailAndPassword(auth, email, password)
+                  .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log("Successfully logged in")
+                  })
+                  .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                  });
+                }}>
+                <Text style={{color: "rgb(255, 238, 0)"}}>Log In!</Text>
               </Button>
             </Col>
           </Grid>
