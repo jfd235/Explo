@@ -18,6 +18,10 @@ In Explo main directory, run:
 ```
 npx expo start
 ```
+You may need to install some dependencies, such as:
+```
+yarn install expo
+```
 
 More instructions coming :P  
 See https://reactnative.dev/docs/environment-setup?guide=quickstart  
