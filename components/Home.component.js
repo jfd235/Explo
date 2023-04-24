@@ -8,7 +8,7 @@ import * as Location from 'expo-location';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // test firebase
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { FONT_COLOR, BACKGROUND_COLOR } from "../constants";
 
 import { auth } from "../firebaseConfig";
@@ -18,6 +18,7 @@ const HomeComponent = props => {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
   const loadFonts = async () => {
     try {
       if (Platform.OS === "android") {
@@ -49,21 +50,6 @@ const HomeComponent = props => {
   useEffect(() => {
     loadFonts();
     findCoordinates();
-
-  //   const email = "wg222@cornell.edu";
-  //   const password = "123456";
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //     .then((userCredential) => {
-  //       // Signed in 
-  //       const user = userCredential.user;
-  //       console.log("user signed up");
-  //       // ...
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // ..
-      // });
   }, []);
 
   return (
@@ -80,27 +66,6 @@ const HomeComponent = props => {
               <Input placeholder="Email" value={email} onChangeText={setEmail}/>
               <Input placeholder="Password" value={password} onChangeText={setPassword} secureTextEntry/>
             </Row>
-            <Col>
-              <Button 
-                  style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}
-                  title="Sign up"
-                  onPress={() => {
-                    const email = "wg222@cornell.edu";
-                    const password = "123456";
-                    createUserWithEmailAndPassword(auth, email, password)
-                      .then((userCredential) => {
-                        // Signed in 
-                        const user = userCredential.user;
-                        console.log("user signed up");
-                        // ...
-                      })
-                      .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        // ..
-                      });
-                  }}/>
-            </Col>
             <Col>
               <Button style={{ alignSelf: "center", backgroundColor: BACKGROUND_COLOR.DARK_GREY }}
                 onPress={() => {
@@ -119,13 +84,14 @@ const HomeComponent = props => {
                     .then((userCredential) => {
                       // Signed in 
                       const user = userCredential.user;
+                      setUser(user)
                       console.log("user signed up");
                       // ...
                     })
                     .catch((error) => {
                       const errorCode = error.code;
                       const errorMessage = error.message;
-                      console.log(errorMessage)
+                      console.log("error" + errorMessage)
                       // ..
                     });
                 }}>
@@ -140,14 +106,31 @@ const HomeComponent = props => {
                   .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
+                    setUser(user)
                     console.log("Successfully logged in")
                   })
                   .catch((error) => {
+                    console.log("error" + error)
                     const errorCode = error.code;
                     const errorMessage = error.message;
                   });
                 }}>
                 <Text style={{color: "rgb(255, 238, 0)"}}>Log In!</Text>
+              </Button>
+            </Col>
+            <Col>
+              <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}
+                onPress={() => {
+                  console.log("Signing Out!");
+                  signOut(auth).then(() => {
+                    // Sign-out successful.
+                    setUser(null)
+                  }).catch((error) => {
+                    // An error happened.
+                    console.log("error" + error)
+                  });
+                }}>
+                <Text style={{color: "rgb(255, 238, 0)"}}>Sign Out!</Text>
               </Button>
             </Col>
           </Grid>
