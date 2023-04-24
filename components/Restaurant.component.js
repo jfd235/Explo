@@ -11,6 +11,7 @@ import { Grid, Col } from "react-native-easy-grid";
 import { StyleSheet, FlatList, TouchableOpacity, Image } from "react-native";
 import BusinessResource from "../resources/Business.resource";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FONT_COLOR, BACKGROUND_COLOR } from "../constants";
 
 const RestaurantComponent = props => {
 
@@ -42,7 +43,7 @@ const RestaurantComponent = props => {
         <FontAwesome
           key={count}
           name="star"
-          color="rgb(246,178,46)"
+          color={FONT_COLOR.DEFAULT}
           size={16}
         />
       );
@@ -52,7 +53,7 @@ const RestaurantComponent = props => {
         <FontAwesome
           key={count}
           name="star-half-empty"
-          color="rgb(246,178,46)"
+          color={FONT_COLOR.DEFAULT}
           size={16}
         />)
     }
@@ -61,7 +62,7 @@ const RestaurantComponent = props => {
         <FontAwesome
           key={count}
           name="star-o"
-          color="rgb(246,178,46)"
+          color={FONT_COLOR.DEFAULT}
           size={16}
         />
       );
@@ -132,7 +133,7 @@ const RestaurantComponent = props => {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "rgb(240, 240, 240)",
+    backgroundColor: BACKGROUND_COLOR.LIGHT_GREY,
     paddingLeft: 5,
     paddingRight: 5,
     paddingTop: -45

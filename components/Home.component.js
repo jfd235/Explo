@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 // test firebase
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FONT_COLOR, BACKGROUND_COLOR } from "../constants";
 
 import { auth } from "../firebaseConfig";
 
@@ -29,7 +30,7 @@ const HomeComponent = props => {
   };
 
   const findCoordinates = async () => {
-    let { status } = await Location.requestPermissionsAsync();
+    let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       this.setState({
         locationResult: 'Permission to access location was denied',
@@ -64,7 +65,7 @@ const HomeComponent = props => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "rgb(240, 240, 240)" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: BACKGROUND_COLOR.LIGHT_GREY }}>
       {loading ? (
         <Grid style={{ alignItems: "center" }}>
           <Col>
@@ -74,13 +75,13 @@ const HomeComponent = props => {
       ) : (
           <Grid style={{ alignItems: "center" }}>
             <Col>
-              <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}
+              <Button style={{ alignSelf: "center", backgroundColor: BACKGROUND_COLOR.DARK_GREY }}
                 onPress={() => {
                   props.navigation.navigate("Restaurants", {
                     coordinates
                   });
                 }}>
-                <Text style={{color: "rgb(255, 238, 0)"}}>View Local Restaurants</Text>
+                <Text style={{color: FONT_COLOR.YELLOW}}>View Local Restaurants</Text>
               </Button>
             </Col>
           </Grid>

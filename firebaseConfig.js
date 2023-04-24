@@ -7,15 +7,17 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 // import {...} from "firebase/functions";
 // import {...} from "firebase/storage";
 
+import { FIREBASE_CONFIG } from './constants';
+
 // Initialize Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyCAmTaSeJydmfCztmNQG5JnxFLkLmlXxUg",
-    authDomain: "explo-b7866.firebaseapp.com",
-    projectId: "explo-b7866",
-    storageBucket: "explo-b7866.appspot.com",
-    messagingSenderId: "623728735787",
-    appId: "1:623728735787:web:a2d499ab64429ae9ee1c6e",
-    measurementId: "G-Y4EKPMKJ3R"
+    apiKey: FIREBASE_CONFIG.API_KEY,
+    authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
+    projectId: FIREBASE_CONFIG.PROJECT_ID,
+    storageBucket: FIREBASE_CONFIG.STORAGE_BUCKET,
+    messagingSenderId: FIREBASE_CONFIG.MESSAGE_ID,
+    appId: FIREBASE_CONFIG.APP_ID,
+    measurementId: FIREBASE_CONFIG.MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
