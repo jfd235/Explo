@@ -13,6 +13,12 @@ In Explo main directory, run:
 npx react-native run-ios
 ```
 
+## Running on Expo App
+In Explo main directory, run:  
+```
+npx expo start
+```
+
 More instructions coming :P  
 See https://reactnative.dev/docs/environment-setup?guide=quickstart  
 under "React Native CLI Quickstart" and "MacOS/iOS" for help
