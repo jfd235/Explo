@@ -22,6 +22,9 @@ DerivedData
 project.xcworkspace
 **/.xcode.env.local
 
+# Expo
+/.expo
+
 # Gradle
 /build/
 /packages/react-native-gradle-plugin/build/
