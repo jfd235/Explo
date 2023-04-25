@@ -6,7 +6,14 @@ npm install react-native-maps --save
 cd ios  
 pod install  
 ```
-    
+Screen Navigation:
+```
+npx expo install react-native-screens react-native-safe-area-context
+npx expo install expo-location
+cd ios
+pod install
+```
+  
 ## Running on Expo App
 In Explo main directory, run:  
 ```
