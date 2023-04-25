@@ -1,5 +1,9 @@
 # Explo
 ## Dependencies
+Expo:  
+```
+yarn add expo
+```
 Google Maps:  
 ```
 npm install react-native-maps --save  
@@ -19,10 +23,7 @@ In Explo main directory, run:
 ```
 npx expo start
 ```
-You may need to install some dependencies, such as:
-```
-yarn install expo
-```
+You may need to install some dependencies, just follow any on-screen instructions.
   
 ## Running on iOS Simulator (Only if above method with Expo doesn't work)
 In Explo main directory, run:  
