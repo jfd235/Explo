@@ -1,4 +1,9 @@
 {
   "name": "Explo",
-  "displayName": "Explo"
+  "displayName": "Explo",
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#f3f0f1"
+  }
 }
