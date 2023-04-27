@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { Button, TextInput, StyleSheet, View, Text } from 'react-native';
 
@@ -7,6 +7,7 @@ export function SignUpLogInComponent({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
+    const [emailVerified, setEmailVerified] = useState(false);
 
   return (
     <View style={[styles.container,{flexDirection: 'column',},]}>
@@ -18,7 +19,12 @@ export function SignUpLogInComponent({ navigation }) {
                 value={email}
                 onChangeText={setEmail}
             />
-            </View>
+            {user && user.emailVerified ? (
+                <Text style={{color: "green"}}>Email verified!</Text>
+            ) : (
+                <Text style={{color: "red"}}>Please verify your email when signing up to access your account</Text>
+            )}
+        </View>
         <View style={inputStyles.inputContainer}>
             <Text>Password:</Text>
             <TextInput
@@ -39,7 +45,13 @@ export function SignUpLogInComponent({ navigation }) {
                     const user = userCredential.user;
                     setUser(user)
                     console.log("user signed up");
-                    // ...
+                    
+                    // Send email verification
+                    sendEmailVerification(user).then(() => {
+                        console.log("Email verification sent");
+                    }).catch((error) => {
+                        console.log("Error sending email verification: " + error);
+                    });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -56,15 +68,21 @@ export function SignUpLogInComponent({ navigation }) {
                 console.log("Logging In!");
                 signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                setUser(user)
-                console.log("Successfully logged in")
+                    // Signed in 
+                    const user = userCredential.user;
+                    if (user.emailVerified) {
+                        setUser(user)
+                        setEmailVerified(true);
+                        console.log("Successfully logged in")
+                    }
+                    else {
+                        console.log("Please verify your email before logging in");
+                    }
                 })
                 .catch((error) => {
-                console.log("error" + error)
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                    console.log("error" + error)
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
                 });
             }}>
         </Button>
@@ -74,11 +92,12 @@ export function SignUpLogInComponent({ navigation }) {
             onPress={() => {
                 console.log("Signing Out!");
                 signOut(auth).then(() => {
-                // Sign-out successful.
-                setUser(null)
+                    // Sign-out successful.
+                    setUser(null)
+                    setEmailVerified(false);
                 }).catch((error) => {
-                // An error happened.
-                console.log("error" + error)
+                    // An error happened.
+                    console.log("error" + error)
                 });
             }}>
             <Text style={{color: "rgb(255, 238, 0)"}}>Sign Out!</Text>
