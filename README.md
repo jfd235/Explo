@@ -4,6 +4,10 @@ Expo:
 ```
 yarn add expo
 ```
+Firebase:  
+```
+npx expo install firebase
+```
 Google Maps:  
 ```
 npm install react-native-maps --save  
