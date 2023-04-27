@@ -7,6 +7,7 @@ yarn add expo
 Firebase:  
 ```
 npx expo install firebase
+npm install expo-image-picker
 ```
 Google Maps:  
 ```
