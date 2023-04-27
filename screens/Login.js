@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { Button, TextInput, StyleSheet, View, Text } from 'react-native';
+import { setUserVariable } from '../UserContext';
 
-export function SignUpLogInComponent({ navigation }) {
+export function SignUpLogInComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
@@ -35,74 +36,77 @@ export function SignUpLogInComponent({ navigation }) {
                 secureTextEntry
             />
         </View>
-      <View style={[buttonStyles.container]}>
-        <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)"}} title="Sign me up!"
-            onPress={() => {
-                console.log("signing up");
-                createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    setUser(user)
-                    console.log("user signed up");
-                    
-                    // Send email verification
-                    sendEmailVerification(user).then(() => {
-                        console.log("Email verification sent");
-                    }).catch((error) => {
-                        console.log("Error sending email verification: " + error);
-                    });
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log("error" + errorMessage)
-                    // ..
-                });
-            }}>
-        </Button>
-      </View>
-      <View style={[buttonStyles.container]}>
-        <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}  title="Log in!"
-            onPress={() => {
-                console.log("Logging In!");
-                signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    if (user.emailVerified) {
+        <View style={[buttonStyles.container]}>
+            <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)"}} title="Sign me up!"
+                onPress={() => {
+                    console.log("signing up");
+                    createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Signed in 
+                        const user = userCredential.user;
                         setUser(user)
-                        setEmailVerified(true);
-                        console.log("Successfully logged in")
-                    }
-                    else {
-                        console.log("Please verify your email before logging in");
-                    }
-                })
-                .catch((error) => {
-                    console.log("error" + error)
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                });
-            }}>
-        </Button>
-      </View>
-      <View style={[buttonStyles.container]}>
-        <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }} title="Sign out!"
-            onPress={() => {
-                console.log("Signing Out!");
-                signOut(auth).then(() => {
-                    // Sign-out successful.
-                    setUser(null)
-                    setEmailVerified(false);
-                }).catch((error) => {
-                    // An error happened.
-                    console.log("error" + error)
-                });
-            }}>
-            <Text style={{color: "rgb(255, 238, 0)"}}>Sign Out!</Text>
-        </Button>
-      </View>
+                        setUserVariable(user)
+                        console.log("user signed up");
+                        
+                        // Send email verification
+                        sendEmailVerification(user).then(() => {
+                            console.log("Email verification sent");
+                        }).catch((error) => {
+                            console.log("Error sending email verification: " + error);
+                        });
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log("error" + errorMessage)
+                        // ..
+                    });
+                }}>
+            </Button>
+        </View>
+        <View style={[buttonStyles.container]}>
+            <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}  title="Log in!"
+                onPress={() => {
+                    console.log("Logging In!");
+                    signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Signed in 
+                        const user = userCredential.user;
+                        if (user.emailVerified) {
+                            setUser(user)
+                            setUserVariable(user)
+                            setEmailVerified(true);
+                            console.log("Successfully logged in")
+                        }
+                        else {
+                            console.log("Please verify your email before logging in");
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("error" + error)
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                    });
+                }}>
+            </Button>
+        </View>
+        <View style={[buttonStyles.container]}>
+            <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }} title="Sign out!"
+                onPress={() => {
+                    console.log("Signing Out!");
+                    signOut(auth).then(() => {
+                        // Sign-out successful.
+                        setUser(null)
+                        setUserVariable(null)
+                        setEmailVerified(false);
+                    }).catch((error) => {
+                        // An error happened.
+                        console.log("error" + error)
+                    });
+                }}>
+                <Text style={{color: "rgb(255, 238, 0)"}}>Sign Out!</Text>
+            </Button>
+        </View>
     </View>
   );
 }
