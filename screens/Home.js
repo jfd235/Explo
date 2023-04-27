@@ -19,6 +19,12 @@ export function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate('Profile')}
         />
       </View>
+      <View style={[buttonStyles.container]}>
+        <Button color="#FFFFFF"
+          title="Sign Up/Log In"
+          onPress={() => navigation.navigate('Login')}
+        />
+      </View>
     </View>
   );
 }
