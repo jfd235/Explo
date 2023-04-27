@@ -1,20 +1,31 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
-import firebase from 'firebase/app';
+// import firebase from 'firebase/app';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
-import 'firebase/storage';
+// import 'firebase/storage';
 import { auth } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 
-let user = getUserVariable();
+// let user = getUserVariable();
 
 async function uploadProfileImage(imageUri) {
-  const storageRef = firebase.storage().ref(`users/${user.uid}/profile.jpg`);
-
+  // const userId = auth().currentUser.uid;
+  let user = getUserVariable();
+  console.log(user)
+  const storage = getStorage();
+  const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
   const response = await fetch(imageUri);
   const blob = await response.blob();
 
-  await storageRef.put(blob);
+  uploadBytes(storageRef, blob).then((snapshot) => {
+    console.log('Uploaded a blob or file!');
+  });
+
+  // const response = await fetch(imageUri);
+  // const blob = await response.blob();
+
+  // await storageRef.put(blob);
 
   const downloadUrl = await storageRef.getDownloadURL();
   return downloadUrl;
@@ -72,6 +83,7 @@ export function ProfileScreen() {
 
         if (!result.cancelled) {
           setProfileImage(result.uri);
+          uploadProfileImage(result.uri)
         }
       } catch (error) {
         console.log(error);
