@@ -61,7 +61,7 @@ export function ProfileScreen({ navigation: { goBack } }) {
         });
         // Update user context or navigate to another screen
         console.log("Profile updated:", user.displayName)
-        Alert.alert('Success', 'Uploaded profile picture!');
+        Alert.alert('Success', 'Updated profile!');
         goBack();
       } catch (error) {
         console.log(error);
