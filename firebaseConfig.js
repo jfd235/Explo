@@ -25,6 +25,6 @@ const app = initializeApp(firebaseConfig);
 
 const providerGoogle = new GoogleAuthProvider();
 const auth = getAuth(app);
-export {auth, providerGoogle};
+export {auth, providerGoogle, app};
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase

@@ -1,37 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
-// import firebase from 'firebase/app';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateProfile } from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
-// import 'firebase/storage';
-import { auth } from "../firebaseConfig";
+import { auth, app } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 
-// let user = getUserVariable();
-
-async function uploadProfileImage(imageUri) {
-  // const userId = auth().currentUser.uid;
-  let user = getUserVariable();
-  console.log(user)
-  const storage = getStorage();
-  const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
-  const response = await fetch(imageUri);
-  const blob = await response.blob();
-
-  uploadBytes(storageRef, blob).then((snapshot) => {
-    console.log('Uploaded a blob or file!');
-  });
-
-  // const response = await fetch(imageUri);
-  // const blob = await response.blob();
-
-  // await storageRef.put(blob);
-
-  const downloadUrl = await storageRef.getDownloadURL();
-  return downloadUrl;
-}
-
-export function ProfileScreen() {
+export function ProfileScreen({ navigation: { goBack } }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   console.log("called again")
@@ -47,20 +22,47 @@ export function ProfileScreen() {
 
   else {
     useEffect(() => {
-      const user = getUserVariable();
+      downloadProfileImage();
       setName(user.displayName);
-      setProfileImage(user.photoURL);
       console.log(profileImage)
     }, []);
+
+    const uploadProfileImage = async (imageUri) => {
+      console.log("Uploading profile picture...")
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      
+      uploadBytes(storageRef, blob).then((snapshot) => {
+        console.log('Uploaded profile picture!');
+        Alert.alert('Success', 'Uploaded profile picture!');
+      });
+      
+      await downloadProfileImage();
+      goBack();
+    }
+
+    const downloadProfileImage = async () => {
+      const storage = getStorage(app);
+      const storageRef = ref(storage, user.photoURL);
+      const val = await getDownloadURL(storageRef).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        setProfileImage(downloadURL);
+      });
+    }
 
 
     const handleUpdateProfile = async () => {
       try {
-        await user.updateProfile({
+        await updateProfile(user, {
           displayName: name,
-          photoURL: profileImage,
+          photoURL: `users/${user.uid}/profile.jpg`,
         });
         // Update user context or navigate to another screen
+        console.log("Profile updated:", user.displayName)
+        Alert.alert('Success', 'Uploaded profile picture!');
+        goBack();
       } catch (error) {
         console.log(error);
       }
@@ -82,8 +84,7 @@ export function ProfileScreen() {
         });
 
         if (!result.cancelled) {
-          setProfileImage(result.uri);
-          uploadProfileImage(result.uri)
+          await uploadProfileImage(result.uri).then(response => console.log(response));;
         }
       } catch (error) {
         console.log(error);
@@ -93,7 +94,7 @@ export function ProfileScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.profileImageContainer}>
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          <Image source={{ uri: profileImage, cache: 'reload' }} style={styles.profileImage} />
           <Button title="Change Profile Image" onPress={handleSelectProfileImage} />
         </View>
         <View style={styles.profileInfoContainer}>
@@ -103,7 +104,7 @@ export function ProfileScreen() {
             value={name}
             onChangeText={setName}
           />
-          <Button title="Update Profile" onPress={handleUpdateProfile} />
+          <Button title="Update Username" onPress={handleUpdateProfile} />
         </View>
       </View>
     );
