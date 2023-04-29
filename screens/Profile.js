@@ -68,7 +68,8 @@ export function ProfileScreen({ navigation: { goBack } }) {
 
     const downloadProfileImage = async () => {
       const storage = getStorage(app);
-      const storageRef = storeRef(storage, user.photoURL);
+      // const storageRef = storeRef(storage, user.photoURL);
+      const storageRef = storeRef(storage, `users/${user.uid}/profile.jpg`);
       const val = await getDownloadURL(storageRef).then((downloadURL) => {
         console.log('File available at', downloadURL);
         setProfileImage(downloadURL);

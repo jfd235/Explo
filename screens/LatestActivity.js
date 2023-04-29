@@ -3,6 +3,7 @@ import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { set, ref, onValue, query, equalTo, orderByChild} from "firebase/database";
 import { db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
+import { FlatList } from "native-base";
 
 export function LatestActivityScreen({ navigation: { goBack } }) {
   const [friends, setFriends] = useState([]);
@@ -28,6 +29,7 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
         const data = snapshot.val();
         console.log("friends")
         console.log(data)
+        setFriends(data)
         // setFriends(data.name);
       });
     }
@@ -41,12 +43,9 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
       const nameQuery = query(usersRef, orderByChild('name'), equalTo(newFriend));
       onValue(nameQuery, (snapshot) => {
         data = snapshot.val();
-        console.log(data);
       });
 
       const userId = Object.entries(data)[0][0]
-      console.log(typeof userId)
-      console.log(data[userId].email)
 
       // This adds the friend to the users's friends list
       set(ref(db, `users/${user.uid}/friends/${data[userId].name}`), {          
@@ -62,8 +61,18 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
         alert(error);
       });
 
-      readData();
+      console.log(friends)
+
+      friends.push(data[userId].name)
     }
+
+    const renderItem = ({ item }) => {
+      return (
+        <View>
+          <Text>{item.name}</Text>
+        </View>
+      );
+    };
 
     return (
       <View style={styles.container}>
@@ -71,6 +80,10 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
           <Text></Text>
           <TextInput style={styles.nameInput} placeholder="Enter your friend's name" onChangeText={setFriendToAdd} />
           <Button title="Add Friend" onPress={createData} />
+        </View>
+        <View style={styles.profileInfoContainer}>
+          <Text>Friends List:</Text>
+          <FlatList data={friends}></FlatList>
         </View>
       </View>
     );
