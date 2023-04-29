@@ -3,12 +3,30 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, se
 import { auth } from "../firebaseConfig";
 import { Button, TextInput, StyleSheet, View, Text } from 'react-native';
 import { setUserVariable } from '../UserContext';
+import { set, ref } from "firebase/database";
+import { db } from "../firebaseConfig";
 
 export function SignUpLogInComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
     const [emailVerified, setEmailVerified] = useState(false);
+
+    // Send user data to firebase
+    function createData() {
+        set(ref(db, `users/${user.uid}`), {          
+          id: user.uid,
+          email: email,
+          name: ''
+        }).then(() => {
+          // Data saved successfully!
+          alert('data updated!');
+        })  
+        .catch((error) => {
+          // The write failed...
+          alert(error);
+        });
+      }
 
   return (
     <View style={[styles.container,{flexDirection: 'column',},]}>
@@ -44,8 +62,9 @@ export function SignUpLogInComponent() {
                     .then((userCredential) => {
                         // Signed in 
                         const user = userCredential.user;
-                        setUser(user)
-                        setUserVariable(user)
+                        setUser(user);
+                        setUserVariable(user);
+                        createData();
                         console.log("user signed up");
                         
                         // Send email verification
@@ -73,9 +92,10 @@ export function SignUpLogInComponent() {
                         // Signed in 
                         const user = userCredential.user;
                         if (user.emailVerified) {
-                            setUser(user)
-                            setUserVariable(user)
+                            setUser(user);
+                            setUserVariable(user);
                             setEmailVerified(true);
+                            createData();
                             console.log("Successfully logged in")
                         }
                         else {
@@ -96,8 +116,8 @@ export function SignUpLogInComponent() {
                     console.log("Signing Out!");
                     signOut(auth).then(() => {
                         // Sign-out successful.
-                        setUser(null)
-                        setUserVariable(null)
+                        setUser(null);
+                        setUserVariable(null);
                         setEmailVerified(false);
                     }).catch((error) => {
                         // An error happened.
