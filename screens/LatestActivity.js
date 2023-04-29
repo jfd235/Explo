@@ -27,10 +27,8 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
       const starCountRef = ref(db, `users/${user.uid}/friends`);
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
-        console.log("friends")
-        console.log(data)
-        setFriends(data)
-        // setFriends(data.name);
+        currentFriends = Object.keys(data)
+        setFriends(currentFriends)
       });
     }
 
@@ -68,22 +66,22 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
 
     const renderItem = ({ item }) => {
       return (
-        <View>
-          <Text>{item.name}</Text>
-        </View>
+        // <View>
+          <Text>{item}</Text>
+        /* </View> */
       );
     };
 
     return (
       <View style={styles.container}>
-        <View style={styles.profileInfoContainer}>
-          <Text></Text>
+        <View style={styles.content}>
+          <Text>Enter friend's name:</Text>
           <TextInput style={styles.nameInput} placeholder="Enter your friend's name" onChangeText={setFriendToAdd} />
           <Button title="Add Friend" onPress={createData} />
         </View>
-        <View style={styles.profileInfoContainer}>
-          <Text>Friends List:</Text>
-          <FlatList data={friends}></FlatList>
+        <View style={styles.content}>
+          <Text>Friend Feed:</Text>
+          <FlatList data={friends} renderItem={renderItem}></FlatList>
         </View>
       </View>
     );
@@ -96,17 +94,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  profileImageContainer: {
+  content: {
+    flex: 1,
     alignItems: "center",
-    marginBottom: 20,
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  profileInfoContainer: {
-    alignItems: "center",
+    justifyContent: "center",
   },
   nameInput: {
     borderBottomWidth: 1,
@@ -116,4 +107,12 @@ const styles = StyleSheet.create({
     width: "80%",
     textAlign: "center",
   },
+//   nameInput: {
+//     borderBottomWidth: 1,
+//     borderColor: "gray",
+//     padding: 10,
+//     marginVertical: 20,
+//     width: "80%",
+//     textAlign: "center",
+//   },
 });
