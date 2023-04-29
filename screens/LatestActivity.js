@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
-import { getStorage, uploadBytes, getDownloadURL, ref as storeRef } from "firebase/storage";
-import { set, ref, update, onValue, remove } from "firebase/database";
-import * as ImagePicker from 'expo-image-picker';
-import { app, db } from "../firebaseConfig";
+import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { set, ref, onValue, query, equalTo, orderByChild} from "firebase/database";
+import { db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 
 export function LatestActivityScreen({ navigation: { goBack } }) {
@@ -30,17 +28,34 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
         const data = snapshot.val();
         console.log("friends")
         console.log(data)
-        setFriends(data.name);
+        // setFriends(data.name);
       });
     }
 
-    // Send data to firebase
+    // Add friends to firebase
     function createData() {
-      set(ref(db, `users/${user.uid}/friends`), {          
-        name: name
+      let data = null;
+
+      // This queries the user
+      const usersRef = ref(db, 'users');
+      const nameQuery = query(usersRef, orderByChild('name'), equalTo(newFriend));
+      onValue(nameQuery, (snapshot) => {
+        data = snapshot.val();
+        console.log(data);
+      });
+
+      const userId = Object.entries(data)[0][0]
+      console.log(typeof userId)
+      console.log(data[userId].email)
+
+      // This adds the friend to the users's friends list
+      set(ref(db, `users/${user.uid}/friends/${data[userId].name}`), {          
+        email: data[userId].email,
+        id: data[userId].id,
+        name: data[userId].name,
       }).then(() => {
         // Data saved successfully!
-        alert('data updated!');
+        alert('Friend Added!');
       })  
       .catch((error) => {
         // The write failed...

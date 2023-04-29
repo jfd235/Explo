@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
 import { getStorage, uploadBytes, getDownloadURL, ref as storeRef } from "firebase/storage";
-// import { storage } from 'firebase';
 import { ref, update, onValue, remove } from "firebase/database";
 import { updateProfile } from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
@@ -11,7 +10,6 @@ import { getUserVariable } from '../UserContext';
 export function ProfileScreen({ navigation: { goBack } }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [uploading, setUploading] = useState(false)
   let user = getUserVariable();
 
   if (!user) {
@@ -76,23 +74,6 @@ export function ProfileScreen({ navigation: { goBack } }) {
         setProfileImage(downloadURL);
       });
     }
-
-
-    const handleUpdateProfile = async () => {
-      try {
-        await updateProfile(user, {
-          displayName: name,
-          photoURL: `users/${user.uid}/profile.jpg`,
-        });
-        // Update user context or navigate to another screen
-        console.log("Profile updated:", user.displayName)
-        Alert.alert('Success', 'Updated profile!');
-        goBack();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
 
     const handleSelectProfileImage = async () => {
       try {

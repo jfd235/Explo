@@ -17,7 +17,8 @@ export function SignUpLogInComponent() {
         set(ref(db, `users/${user.uid}`), {          
           id: user.uid,
           email: email,
-          name: ''
+          name: '',
+          friends: []
         }).then(() => {
           // Data saved successfully!
           alert('data updated!');
