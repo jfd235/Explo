@@ -4,6 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '13.0' #min_ios_version_supported
 prepare_react_native_project!
+# use_modular_headers!
 install! 'cocoapods', :disable_input_output_paths => true
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
