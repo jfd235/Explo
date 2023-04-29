@@ -41,27 +41,33 @@ export function LatestActivityScreen({ navigation: { goBack } }) {
       const nameQuery = query(usersRef, orderByChild('name'), equalTo(newFriend));
       onValue(nameQuery, (snapshot) => {
         data = snapshot.val();
+        console.log(data)
+        
+        if (data == null) {
+          alert("User cannot be found!")
+        }
+        else {
+          const userId = Object.entries(data)[0][0]
+
+          // This adds the friend to the users's friends list
+          set(ref(db, `users/${user.uid}/friends/${data[userId].name}`), {          
+            email: data[userId].email,
+            id: data[userId].id,
+            name: data[userId].name,
+          }).then(() => {
+            // Data saved successfully!
+            alert('Friend Added!');
+          })  
+          .catch((error) => {
+            // The write failed...
+            alert(error);
+          });
+
+          console.log(friends)
+
+          friends.push(data[userId].name)
+        }
       });
-
-      const userId = Object.entries(data)[0][0]
-
-      // This adds the friend to the users's friends list
-      set(ref(db, `users/${user.uid}/friends/${data[userId].name}`), {          
-        email: data[userId].email,
-        id: data[userId].id,
-        name: data[userId].name,
-      }).then(() => {
-        // Data saved successfully!
-        alert('Friend Added!');
-      })  
-      .catch((error) => {
-        // The write failed...
-        alert(error);
-      });
-
-      console.log(friends)
-
-      friends.push(data[userId].name)
     }
 
     const renderItem = ({ item }) => {
