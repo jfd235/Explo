@@ -8,6 +8,7 @@ import { ProfileScreen } from './screens/Profile'
 import { BizDetail } from './screens/BizDetail';
 import { MapScreen } from './screens/Map'
 import { SignUpLogInComponent } from './screens/Login'
+import { LatestActivityScreen } from './screens/LatestActivity'
 import { NativeBaseProvider } from 'native-base';
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ function App() {
           <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen name="Login" component={SignUpLogInComponent} />
           <Stack.Screen name="Detail" component={BizDetail} />
+          <Stack.Screen name="Latest Activity" component={LatestActivityScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

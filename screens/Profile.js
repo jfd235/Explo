@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
 import { getStorage, uploadBytes, getDownloadURL, ref as storeRef } from "firebase/storage";
-// import { storage } from 'firebase';
-import { set, ref, update, onValue, remove } from "firebase/database";
+import { ref, update, onValue, remove } from "firebase/database";
 import { updateProfile } from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
 import { app, db } from "../firebaseConfig";
@@ -11,7 +10,6 @@ import { getUserVariable } from '../UserContext';
 export function ProfileScreen({ navigation: { goBack } }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [uploading, setUploading] = useState(false)
   let user = getUserVariable();
 
   if (!user) {
@@ -29,7 +27,7 @@ export function ProfileScreen({ navigation: { goBack } }) {
     }, []);
 
     function readData() {
-      const starCountRef = ref(db, `users/${user.uid}/name`);
+      const starCountRef = ref(db, `users/${user.uid}`);
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         setName(data.name);
@@ -37,8 +35,8 @@ export function ProfileScreen({ navigation: { goBack } }) {
     }
 
     // Send data to firebase
-    function createData() {
-      set(ref(db, `users/${user.uid}/name`), {          
+    function updateData() {
+      update(ref(db, `users/${user.uid}`), {          
         name: name
       }).then(() => {
         // Data saved successfully!
@@ -70,29 +68,13 @@ export function ProfileScreen({ navigation: { goBack } }) {
 
     const downloadProfileImage = async () => {
       const storage = getStorage(app);
-      const storageRef = storeRef(storage, user.photoURL);
+      // const storageRef = storeRef(storage, user.photoURL);
+      const storageRef = storeRef(storage, `users/${user.uid}/profile.jpg`);
       const val = await getDownloadURL(storageRef).then((downloadURL) => {
         console.log('File available at', downloadURL);
         setProfileImage(downloadURL);
       });
     }
-
-
-    const handleUpdateProfile = async () => {
-      try {
-        await updateProfile(user, {
-          displayName: name,
-          photoURL: `users/${user.uid}/profile.jpg`,
-        });
-        // Update user context or navigate to another screen
-        console.log("Profile updated:", user.displayName)
-        Alert.alert('Success', 'Updated profile!');
-        goBack();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
 
     const handleSelectProfileImage = async () => {
       try {
@@ -124,7 +106,7 @@ export function ProfileScreen({ navigation: { goBack } }) {
         </View>
         <View style={styles.profileInfoContainer}>
           <TextInput style={styles.nameInput} placeholder="Enter your name" value={name} onChangeText={setName} />
-          <Button title="Update name" onPress={createData} />
+          <Button title="Update name" onPress={updateData} />
         </View>
       </View>
     );
