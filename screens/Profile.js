@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
+import { View, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
 import { getStorage, uploadBytes, getDownloadURL, ref as storeRef } from "firebase/storage";
 // import { storage } from 'firebase';
 import { set, ref, update, onValue, remove } from "firebase/database";
@@ -7,6 +7,7 @@ import { updateProfile } from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
 import { app, db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
+import { Box, HStack, VStack, Text } from "native-base";
 
 export function ProfileScreen({ navigation: { goBack } }) {
   const [name, setName] = useState("");
@@ -23,10 +24,14 @@ export function ProfileScreen({ navigation: { goBack } }) {
   }
 
   else {
+    let progressList = null;
+    
     useEffect(() => {
       downloadProfileImage();
       readData();
     }, []);
+    
+    progressList = getProgressList();
 
     function readData() {
       const starCountRef = ref(db, `users/${user.uid}/name`);
@@ -50,6 +55,25 @@ export function ProfileScreen({ navigation: { goBack } }) {
       });
 
       readData();
+    }
+
+    function getProgressList() {
+      // TODO: replace with real data
+      let userProgress = [{location: "Midtown East", progress: 0.76}, {location: "Flatiron", progress: 0.72}, {location: "Hell's Kitchen", progress: 0.70}];
+      
+      return (
+        <VStack paddingLeft={6} paddingRight={6} space={3} alignItems="center" >
+          {userProgress.map((dataEntry) => 
+                <HStack key={dataEntry.location} justifyContent="space-between" w="80%">
+                  <Text italic fontSize="md">
+                    {dataEntry.location}
+                  </Text>
+                  <Text fontSize="md" color="#32A93E">
+                    {dataEntry.progress * 100 + "%"}
+                  </Text>
+                </HStack>)}
+        </VStack>
+      );
     }
 
     const uploadProfileImage = async (imageUri) => {
@@ -116,8 +140,11 @@ export function ProfileScreen({ navigation: { goBack } }) {
       }
     };
 
+    
+
     return (
       <View style={styles.container}>
+        <VStack space={5} justifyContent="center">
         <View style={styles.profileImageContainer}>
           <Image source={{ uri: profileImage, cache: 'reload' }} style={styles.profileImage} />
           <Button title="Change Profile Image" onPress={handleSelectProfileImage} />
@@ -126,6 +153,8 @@ export function ProfileScreen({ navigation: { goBack } }) {
           <TextInput style={styles.nameInput} placeholder="Enter your name" value={name} onChangeText={setName} />
           <Button title="Update name" onPress={createData} />
         </View>
+        {progressList}
+        </VStack>
       </View>
     );
   }
