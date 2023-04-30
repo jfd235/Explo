@@ -38,6 +38,13 @@ export function HomeScreen({ navigation }) {
         />
         <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/>
       </View>
+      <View style={[buttonStyles.container, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+        <Button color="#FFFFFF"
+          title="Go to Check in"
+          onPress={() => navigation.navigate('CheckIn')}
+        />
+        <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/>
+      </View>
     </View>
   );
 }

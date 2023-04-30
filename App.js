@@ -6,9 +6,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './screens/Home'
 import { ProfileScreen } from './screens/Profile'
 import { BizDetail } from './screens/BizDetail';
+import { CheckIn } from './screens/CheckIn';
 import { MapScreen } from './screens/Map'
 import { SignUpLogInComponent } from './screens/Login'
 import { NativeBaseProvider } from 'native-base';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,7 @@ function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Map" component={MapScreen} />
+          <Stack.Screen name="CheckIn" component={CheckIn} />
           <Stack.Screen name="Login" component={SignUpLogInComponent} />
           <Stack.Screen name="Detail" component={BizDetail} />
         </Stack.Navigator>

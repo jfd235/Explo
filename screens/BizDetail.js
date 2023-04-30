@@ -27,13 +27,17 @@ export function BizDetail() {
     const dollarSignComponents = Array.from({ length: 3 }, (_, index) => (
       <Text key={index}>$</Text>
     ));
-    const addr = "1 E Loop Rd, New York, NY, 10044";
 
+    // TODO: replace with real data
+    const bizName = "Pizza Royal";
+    const addr = "1 E Loop Rd, New York, NY, 10044";
     const reviewData = {
       username: "John Doe",
       rating: 5,
       text: "Best place I have ever been!"
     };
+
+
     return (
         <VStack space={6} justifyContent="center" paddingTop={5}>
           <Center>
@@ -52,7 +56,7 @@ export function BizDetail() {
               />
               <Box bg={theme.colors.tertiary[900]}>
                 <Text>
-                    Number of reviews
+                    {bizName}
                 </Text>
               </Box>
             </HStack>
