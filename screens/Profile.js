@@ -1,40 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image, Button, TextInput, StyleSheet } from 'react-native';
-// import firebase from 'firebase/app';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { View, Text, Image, Button, Alert, TextInput, StyleSheet } from 'react-native';
+import { getStorage, uploadBytes, getDownloadURL, ref as storeRef } from "firebase/storage";
+// import { storage } from 'firebase';
+import { set, ref, update, onValue, remove } from "firebase/database";
+import { updateProfile } from "firebase/auth"
 import * as ImagePicker from 'expo-image-picker';
-// import 'firebase/storage';
-import { auth } from "../firebaseConfig";
+import { app, db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 
-// let user = getUserVariable();
-
-async function uploadProfileImage(imageUri) {
-  // const userId = auth().currentUser.uid;
-  let user = getUserVariable();
-  console.log(user)
-  const storage = getStorage();
-  const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
-  const response = await fetch(imageUri);
-  const blob = await response.blob();
-
-  uploadBytes(storageRef, blob).then((snapshot) => {
-    console.log('Uploaded a blob or file!');
-  });
-
-  // const response = await fetch(imageUri);
-  // const blob = await response.blob();
-
-  // await storageRef.put(blob);
-
-  const downloadUrl = await storageRef.getDownloadURL();
-  return downloadUrl;
-}
-
-export function ProfileScreen() {
+export function ProfileScreen({ navigation: { goBack } }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  console.log("called again")
+  const [uploading, setUploading] = useState(false)
   let user = getUserVariable();
 
   if (!user) {
@@ -47,20 +24,70 @@ export function ProfileScreen() {
 
   else {
     useEffect(() => {
-      const user = getUserVariable();
-      setName(user.displayName);
-      setProfileImage(user.photoURL);
-      console.log(profileImage)
+      downloadProfileImage();
+      readData();
     }, []);
+
+    function readData() {
+      const starCountRef = ref(db, `users/${user.uid}/name`);
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        setName(data.name);
+      });
+    }
+
+    // Send data to firebase
+    function createData() {
+      set(ref(db, `users/${user.uid}/name`), {          
+        name: name
+      }).then(() => {
+        // Data saved successfully!
+        alert('data updated!');
+      })  
+      .catch((error) => {
+        // The write failed...
+        alert(error);
+      });
+
+      readData();
+    }
+
+    const uploadProfileImage = async (imageUri) => {
+      console.log("Uploading profile picture...")
+      const storage = getStorage(app);
+      const storageRef = storeRef(storage, `users/${user.uid}/profile.jpg`);
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      
+      uploadBytes(storageRef, blob).then((snapshot) => {
+        console.log('Uploaded profile picture!');
+        Alert.alert('Success', 'Uploaded profile picture!');
+      });
+      
+      await downloadProfileImage();
+      goBack();
+    }
+
+    const downloadProfileImage = async () => {
+      const storage = getStorage(app);
+      const storageRef = storeRef(storage, user.photoURL);
+      const val = await getDownloadURL(storageRef).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        setProfileImage(downloadURL);
+      });
+    }
 
 
     const handleUpdateProfile = async () => {
       try {
-        await user.updateProfile({
+        await updateProfile(user, {
           displayName: name,
-          photoURL: profileImage,
+          photoURL: `users/${user.uid}/profile.jpg`,
         });
         // Update user context or navigate to another screen
+        console.log("Profile updated:", user.displayName)
+        Alert.alert('Success', 'Updated profile!');
+        goBack();
       } catch (error) {
         console.log(error);
       }
@@ -82,8 +109,7 @@ export function ProfileScreen() {
         });
 
         if (!result.cancelled) {
-          setProfileImage(result.uri);
-          uploadProfileImage(result.uri)
+          await uploadProfileImage(result.uri).then(response => console.log(response));;
         }
       } catch (error) {
         console.log(error);
@@ -93,17 +119,12 @@ export function ProfileScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.profileImageContainer}>
-          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+          <Image source={{ uri: profileImage, cache: 'reload' }} style={styles.profileImage} />
           <Button title="Change Profile Image" onPress={handleSelectProfileImage} />
         </View>
         <View style={styles.profileInfoContainer}>
-          <TextInput
-            style={styles.nameInput}
-            placeholder="Enter your name"
-            value={name}
-            onChangeText={setName}
-          />
-          <Button title="Update Profile" onPress={handleUpdateProfile} />
+          <TextInput style={styles.nameInput} placeholder="Enter your name" value={name} onChangeText={setName} />
+          <Button title="Update name" onPress={createData} />
         </View>
       </View>
     );

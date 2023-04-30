@@ -3,33 +3,35 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ExploTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ExploTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-Explo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Explo.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-Explo-ExploTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Explo-ExploTests.a */; };
-		80918A5329FB373100F4443C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4329FB373100F4443C /* Zocial.ttf */; };
-		80918A5429FB373100F4443C /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4429FB373100F4443C /* FontAwesome5_Regular.ttf */; };
-		80918A5529FB373100F4443C /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4529FB373100F4443C /* MaterialCommunityIcons.ttf */; };
-		80918A5629FB373100F4443C /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4629FB373100F4443C /* Feather.ttf */; };
-		80918A5729FB373100F4443C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4729FB373100F4443C /* EvilIcons.ttf */; };
-		80918A5829FB373100F4443C /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4829FB373100F4443C /* Entypo.ttf */; };
-		80918A5929FB373100F4443C /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4929FB373100F4443C /* Foundation.ttf */; };
-		80918A5A29FB373100F4443C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4A29FB373100F4443C /* MaterialIcons.ttf */; };
-		80918A5B29FB373100F4443C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4B29FB373100F4443C /* Octicons.ttf */; };
-		80918A5C29FB373100F4443C /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4C29FB373100F4443C /* FontAwesome5_Solid.ttf */; };
-		80918A5D29FB373100F4443C /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4D29FB373100F4443C /* FontAwesome5_Brands.ttf */; };
-		80918A5E29FB373100F4443C /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4E29FB373100F4443C /* SimpleLineIcons.ttf */; };
-		80918A5F29FB373100F4443C /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4F29FB373100F4443C /* Fontisto.ttf */; };
-		80918A6029FB373100F4443C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5029FB373100F4443C /* FontAwesome.ttf */; };
-		80918A6129FB373100F4443C /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5129FB373100F4443C /* AntDesign.ttf */; };
-		80918A6229FB373100F4443C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5229FB373100F4443C /* Ionicons.ttf */; };
+		52759C5B29FB8872009B4B94 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5129FB373100F4443C /* AntDesign.ttf */; };
+		52759C5C29FB8872009B4B94 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4829FB373100F4443C /* Entypo.ttf */; };
+		52759C5D29FB8872009B4B94 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4729FB373100F4443C /* EvilIcons.ttf */; };
+		52759C5E29FB8872009B4B94 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4629FB373100F4443C /* Feather.ttf */; };
+		52759C5F29FB8872009B4B94 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5029FB373100F4443C /* FontAwesome.ttf */; };
+		52759C6029FB8872009B4B94 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4D29FB373100F4443C /* FontAwesome5_Brands.ttf */; };
+		52759C6129FB8872009B4B94 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4429FB373100F4443C /* FontAwesome5_Regular.ttf */; };
+		52759C6229FB8872009B4B94 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4C29FB373100F4443C /* FontAwesome5_Solid.ttf */; };
+		52759C6329FB8872009B4B94 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4F29FB373100F4443C /* Fontisto.ttf */; };
+		52759C6429FB8872009B4B94 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4929FB373100F4443C /* Foundation.ttf */; };
+		52759C6529FB8872009B4B94 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A5229FB373100F4443C /* Ionicons.ttf */; };
+		52759C6629FB8872009B4B94 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4529FB373100F4443C /* MaterialCommunityIcons.ttf */; };
+		52759C6729FB8872009B4B94 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4A29FB373100F4443C /* MaterialIcons.ttf */; };
+		52759C6829FB8872009B4B94 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4B29FB373100F4443C /* Octicons.ttf */; };
+		52759C6929FB8872009B4B94 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4E29FB373100F4443C /* SimpleLineIcons.ttf */; };
+		52759C6A29FB8872009B4B94 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80918A4329FB373100F4443C /* Zocial.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8E21D469C4AF7EBF4106B085 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F106BDB0BA5C39BB65AE56D6 /* ExpoModulesProvider.swift */; };
+		8FE95E1D2AAF08B9959387D0 /* libPods-Explo-ExploTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ACB22C248BC08D3E0A2F81B /* libPods-Explo-ExploTests.a */; };
+		9366A3BDAD20AA0CE568A104 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C25C7C8A0165FEAD63A177F9 /* ExpoModulesProvider.swift */; };
+		C394988A0423AD1541B2BE39 /* libPods-Explo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69EAD94295F712D14471BF46 /* libPods-Explo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,17 +48,15 @@
 		00E356EE1AD99517003FC87E /* ExploTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExploTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ExploTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExploTests.m; sourceTree = "<group>"; };
+		073B9D7590B5D1495EE25F01 /* Pods-Explo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo.release.xcconfig"; path = "Target Support Files/Pods-Explo/Pods-Explo.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Explo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Explo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Explo/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Explo/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Explo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Explo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Explo/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Explo-ExploTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Explo-ExploTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-Explo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo.debug.xcconfig"; path = "Target Support Files/Pods-Explo/Pods-Explo.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-Explo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo.release.xcconfig"; path = "Target Support Files/Pods-Explo/Pods-Explo.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-Explo-ExploTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo-ExploTests.debug.xcconfig"; path = "Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-Explo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Explo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		247A41F8DD7806950B9237B7 /* Pods-Explo-ExploTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo-ExploTests.release.xcconfig"; path = "Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests.release.xcconfig"; sourceTree = "<group>"; };
+		69EAD94295F712D14471BF46 /* libPods-Explo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Explo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		80918A4329FB373100F4443C /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		80918A4429FB373100F4443C /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		80918A4529FB373100F4443C /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
@@ -74,8 +74,12 @@
 		80918A5129FB373100F4443C /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		80918A5229FB373100F4443C /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Explo/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-Explo-ExploTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo-ExploTests.release.xcconfig"; path = "Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests.release.xcconfig"; sourceTree = "<group>"; };
+		8ACB22C248BC08D3E0A2F81B /* libPods-Explo-ExploTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Explo-ExploTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADC7240775EA394A14470281 /* Pods-Explo-ExploTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo-ExploTests.debug.xcconfig"; path = "Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C25C7C8A0165FEAD63A177F9 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Explo-ExploTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		EAA272470A359DCBF59638E3 /* Pods-Explo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explo.debug.xcconfig"; path = "Target Support Files/Pods-Explo/Pods-Explo.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F106BDB0BA5C39BB65AE56D6 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Explo/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-Explo-ExploTests.a in Frameworks */,
+				8FE95E1D2AAF08B9959387D0 /* libPods-Explo-ExploTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-Explo.a in Frameworks */,
+				C394988A0423AD1541B2BE39 /* libPods-Explo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,10 +137,27 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-Explo.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-Explo-ExploTests.a */,
+				69EAD94295F712D14471BF46 /* libPods-Explo.a */,
+				8ACB22C248BC08D3E0A2F81B /* libPods-Explo-ExploTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		44A39F9597AC5A2AB6664FF7 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				6AD1A60AD355570DC14EE917 /* Explo */,
+				A6993165F3FE88CECB650EB3 /* ExploTests */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		6AD1A60AD355570DC14EE917 /* Explo */ = {
+			isa = PBXGroup;
+			children = (
+				F106BDB0BA5C39BB65AE56D6 /* ExpoModulesProvider.swift */,
+			);
+			name = Explo;
 			sourceTree = "<group>";
 		};
 		80918A4229FB369B00F4443C /* Fonts */ = {
@@ -178,6 +199,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				44A39F9597AC5A2AB6664FF7 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -193,13 +215,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A6993165F3FE88CECB650EB3 /* ExploTests */ = {
+			isa = PBXGroup;
+			children = (
+				C25C7C8A0165FEAD63A177F9 /* ExpoModulesProvider.swift */,
+			);
+			name = ExploTests;
+			sourceTree = "<group>";
+		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-Explo.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-Explo.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-Explo-ExploTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-Explo-ExploTests.release.xcconfig */,
+				EAA272470A359DCBF59638E3 /* Pods-Explo.debug.xcconfig */,
+				073B9D7590B5D1495EE25F01 /* Pods-Explo.release.xcconfig */,
+				ADC7240775EA394A14470281 /* Pods-Explo-ExploTests.debug.xcconfig */,
+				247A41F8DD7806950B9237B7 /* Pods-Explo-ExploTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -211,12 +241,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "ExploTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				A86274BBBB30812717801389 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				4B5B188529F9A78333371533 /* [CP] Embed Pods Frameworks */,
+				4BC44D032513BF128E76B84F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -232,14 +262,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Explo" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				66272B29383E47EA03C57372 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				0B49DE162DB83D230CCBA314 /* [CP] Embed Pods Frameworks */,
+				CF2B7820048343FDA48BD4B8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -268,7 +298,7 @@
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Explo" */;
-			compatibilityVersion = "Xcode 12.0";
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -298,23 +328,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80918A5B29FB373100F4443C /* Octicons.ttf in Resources */,
+				52759C5B29FB8872009B4B94 /* AntDesign.ttf in Resources */,
+				52759C5C29FB8872009B4B94 /* Entypo.ttf in Resources */,
+				52759C5D29FB8872009B4B94 /* EvilIcons.ttf in Resources */,
+				52759C5E29FB8872009B4B94 /* Feather.ttf in Resources */,
+				52759C5F29FB8872009B4B94 /* FontAwesome.ttf in Resources */,
+				52759C6029FB8872009B4B94 /* FontAwesome5_Brands.ttf in Resources */,
+				52759C6129FB8872009B4B94 /* FontAwesome5_Regular.ttf in Resources */,
+				52759C6229FB8872009B4B94 /* FontAwesome5_Solid.ttf in Resources */,
+				52759C6329FB8872009B4B94 /* Fontisto.ttf in Resources */,
+				52759C6429FB8872009B4B94 /* Foundation.ttf in Resources */,
+				52759C6529FB8872009B4B94 /* Ionicons.ttf in Resources */,
+				52759C6629FB8872009B4B94 /* MaterialCommunityIcons.ttf in Resources */,
+				52759C6729FB8872009B4B94 /* MaterialIcons.ttf in Resources */,
+				52759C6829FB8872009B4B94 /* Octicons.ttf in Resources */,
+				52759C6929FB8872009B4B94 /* SimpleLineIcons.ttf in Resources */,
+				52759C6A29FB8872009B4B94 /* Zocial.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				80918A6229FB373100F4443C /* Ionicons.ttf in Resources */,
-				80918A5529FB373100F4443C /* MaterialCommunityIcons.ttf in Resources */,
-				80918A6029FB373100F4443C /* FontAwesome.ttf in Resources */,
-				80918A5A29FB373100F4443C /* MaterialIcons.ttf in Resources */,
-				80918A5629FB373100F4443C /* Feather.ttf in Resources */,
-				80918A5E29FB373100F4443C /* SimpleLineIcons.ttf in Resources */,
-				80918A6129FB373100F4443C /* AntDesign.ttf in Resources */,
-				80918A5D29FB373100F4443C /* FontAwesome5_Brands.ttf in Resources */,
-				80918A5929FB373100F4443C /* Foundation.ttf in Resources */,
-				80918A5729FB373100F4443C /* EvilIcons.ttf in Resources */,
-				80918A5329FB373100F4443C /* Zocial.ttf in Resources */,
-				80918A5829FB373100F4443C /* Entypo.ttf in Resources */,
-				80918A5C29FB373100F4443C /* FontAwesome5_Solid.ttf in Resources */,
-				80918A5F29FB373100F4443C /* Fontisto.ttf in Resources */,
-				80918A5429FB373100F4443C /* FontAwesome5_Regular.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,46 +368,52 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		0B49DE162DB83D230CCBA314 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		4B5B188529F9A78333371533 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Explo-ExploTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		4BC44D032513BF128E76B84F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		66272B29383E47EA03C57372 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -399,55 +435,41 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		A86274BBBB30812717801389 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Explo-ExploTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
+		CF2B7820048343FDA48BD4B8 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo/Pods-Explo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Explo-ExploTests/Pods-Explo-ExploTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -477,6 +499,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* ExploTests.m in Sources */,
+				9366A3BDAD20AA0CE568A104 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +509,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				8E21D469C4AF7EBF4106B085 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +526,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Explo-ExploTests.debug.xcconfig */;
+			baseConfigurationReference = ADC7240775EA394A14470281 /* Pods-Explo-ExploTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -510,7 +534,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ExploTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -521,6 +545,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Explo.app/Explo";
@@ -529,12 +554,12 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-Explo-ExploTests.release.xcconfig */;
+			baseConfigurationReference = 247A41F8DD7806950B9237B7 /* Pods-Explo-ExploTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = ExploTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -545,6 +570,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Explo.app/Explo";
@@ -553,11 +579,12 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-Explo.debug.xcconfig */;
+			baseConfigurationReference = EAA272470A359DCBF59638E3 /* Pods-Explo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7549P7VPXB;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Explo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -570,6 +597,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Explo;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -580,11 +608,17 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-Explo.release.xcconfig */;
+			baseConfigurationReference = 073B9D7590B5D1495EE25F01 /* Pods-Explo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7549P7VPXB;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"HERMES_ENABLE_DEBUGGER=1",
+				);
 				INFOPLIST_FILE = Explo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -596,6 +630,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Explo;
 				SWIFT_VERSION = 5.0;
@@ -652,7 +687,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -717,7 +752,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

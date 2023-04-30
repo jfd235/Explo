@@ -22,6 +22,10 @@ npx expo install expo-location
 cd ios
 pod install
 ```
+Others:
+```
+npm install react-native-star-rating-widget
+```
   
 ## Running on Expo App
 In Explo main directory, run:  
