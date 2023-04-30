@@ -45,6 +45,13 @@ export function HomeScreen({ navigation }) {
         />
         <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/>
       </View>
+      <View style={[buttonStyles.container, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+        <Button color="#FFFFFF"
+          title="Go to Friends"
+          onPress={() => navigation.navigate('FriendsListView')}
+        />
+        <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/>
+      </View>
     </View>
   );
 }

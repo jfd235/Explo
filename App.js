@@ -10,6 +10,7 @@ import { CheckIn } from './screens/CheckIn';
 import { MapScreen } from './screens/Map'
 import { SignUpLogInComponent } from './screens/Login'
 import { NativeBaseProvider } from 'native-base';
+import { FriendsListView } from './screens/FriendsListView';
 
 
 const Stack = createNativeStackNavigator();
@@ -36,6 +37,7 @@ function App() {
           <Stack.Screen name="CheckIn" component={CheckIn} />
           <Stack.Screen name="Login" component={SignUpLogInComponent} />
           <Stack.Screen name="Detail" component={BizDetail} />
+          <Stack.Screen name="FriendsListView" component={FriendsListView} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
