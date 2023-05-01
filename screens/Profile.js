@@ -9,10 +9,9 @@ import { app, db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 import { Box, HStack, VStack, Text } from "native-base";
 
-export function ProfileScreen({ navigation: { goBack } }) {
+export function ProfileScreen({ navigation: { goBack, navigate } }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [uploading, setUploading] = useState(false)
   let user = getUserVariable();
 
   if (!user) {
@@ -25,16 +24,16 @@ export function ProfileScreen({ navigation: { goBack } }) {
 
   else {
     let progressList = null;
-    
+
     useEffect(() => {
       downloadProfileImage();
       readData();
     }, []);
-    
+
     progressList = getProgressList();
 
     function readData() {
-      const starCountRef = ref(db, `users/${user.uid}/name`);
+      const starCountRef = ref(db, `users/${user.uid}`);
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         setName(data.name);
@@ -42,8 +41,8 @@ export function ProfileScreen({ navigation: { goBack } }) {
     }
 
     // Send data to firebase
-    function createData() {
-      set(ref(db, `users/${user.uid}/name`), {          
+    function updateData() {
+      update(ref(db, `users/${user.uid}`), {          
         name: name
       }).then(() => {
         // Data saved successfully!
@@ -94,29 +93,13 @@ export function ProfileScreen({ navigation: { goBack } }) {
 
     const downloadProfileImage = async () => {
       const storage = getStorage(app);
-      const storageRef = storeRef(storage, user.photoURL);
+      // const storageRef = storeRef(storage, user.photoURL);
+      const storageRef = storeRef(storage, `users/${user.uid}/profile.jpg`);
       const val = await getDownloadURL(storageRef).then((downloadURL) => {
         console.log('File available at', downloadURL);
         setProfileImage(downloadURL);
       });
     }
-
-
-    const handleUpdateProfile = async () => {
-      try {
-        await updateProfile(user, {
-          displayName: name,
-          photoURL: `users/${user.uid}/profile.jpg`,
-        });
-        // Update user context or navigate to another screen
-        console.log("Profile updated:", user.displayName)
-        Alert.alert('Success', 'Updated profile!');
-        goBack();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
 
     const handleSelectProfileImage = async () => {
       try {
@@ -151,9 +134,16 @@ export function ProfileScreen({ navigation: { goBack } }) {
         </View>
         <View style={styles.profileInfoContainer}>
           <TextInput style={styles.nameInput} placeholder="Enter your name" value={name} onChangeText={setName} />
-          <Button title="Update name" onPress={createData} />
+          <Button title="Update name" onPress={updateData} />
         </View>
         {progressList}
+        <View style={styles.buttonContainer}>
+          <Button
+            color="#FFFFFF"
+            title="View/Add Friends"
+            onPress={() => navigate('AddFriends')}
+          />
+        </View>
         </VStack>
       </View>
     );
@@ -185,5 +175,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: "80%",
     textAlign: "center",
+  },
+  buttonContainer: {
+    width: 200,
+    height: 50,
+    backgroundColor: '#B6E13D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });
