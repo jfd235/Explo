@@ -4,22 +4,11 @@ import { StyleSheet, Button as RNButton } from "react-native"
 import { set, ref, onValue, query, equalTo, orderByChild} from "firebase/database";
 import { db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
+import { getTimeDiff } from '../utils';
 
 
 function onDetailsButtonPressed() {
   console.log("checked in");
-}
-
-function getTimeDiff(lastActTime) {
-    console.log(lastActTime)
-    console.log(new Date(lastActTime));
-    const currTime = new Date();
-    const hourDiff = (currTime.getTime() - lastActTime) / (1000 * 60 * 60);
-    if (hourDiff <= 24) {
-        return Math.round(hourDiff) + " hours ago";
-    } else {
-        return Math.round(hourDiff / 24) + " days ago";
-    }
 }
 
 function handleReadData(user) {

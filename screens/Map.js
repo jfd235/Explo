@@ -1,12 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Dimensions, Button, Image } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { mapStyle } from './mapStyle';
 import * as Location from 'expo-location';
+import { getTimeDiff } from '../utils';
 
 export function MapScreen() {
   const [coordinates, setCoordinates] = useState({});
   const mapRef = useRef(null);
+
+  const MAX_SPAN = 0.005 * 2;
+  
+  
+  function genFriendsMarkers() {
+    if (coordinates == null) return null;
+
+    // TODO: replace with real data
+    const currTime = new Date();
+    const friendsData = [
+      { name: "Haohua", 
+        lastAct: currTime.getTime() - (4 * 60 * 60 * 1000),
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+      },
+      { name: "Jenny", 
+        lastAct: currTime.getTime() - (2 * 60 * 60 * 1000 * 24),
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+      },
+      { name: "Ken", 
+        lastAct: currTime.getTime() - (6 * 60 * 60 * 1000 * 24),
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+      },
+      { name: "Gordon", 
+        lastAct: currTime.getTime() - (3 * 60 * 60 * 1000 * 24),
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+      },
+    ]
+
+
+    return friendsData.map((friendMarker, index) => 
+      <Marker
+        key={index}
+        image={require("../assets/icons/marker.png")}
+        coordinate={{latitude: friendMarker.latitude, longitude: friendMarker.longitude}}
+        title={friendMarker.name}
+        description={getTimeDiff(friendMarker.lastAct)} 
+      />
+    );
+
+  }
+
+  
+  
+  
   
   const findCoordinates = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -43,9 +92,11 @@ export function MapScreen() {
         region={{
           latitude: coordinates.latitude,
           longitude: coordinates.longitude,
-          latitudeDelta: 0.003,
-          longitudeDelta: 0.003,
-        }}mapType="standard"></MapView>
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}mapType="standard">
+          {genFriendsMarkers()}
+        </MapView>
         <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={[buttonStyles.container]}>
             <Button color="#FFFFFF"
