@@ -4,7 +4,9 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { mapStyle } from './mapStyle';
 import * as Location from 'expo-location';
 import { getTimeDiff } from '../utils';
-import { HStack, Box, Pressable, Spacer } from 'native-base';
+import { HStack, Box, Pressable, Spacer, ScrollView, FlatList, Text } from 'native-base';
+import ScrollBizCard from '../components/ScrollBizCard';
+import { calGeoDistance } from '../utils';
 
 export function MapScreen() {
   const [coordinates, setCoordinates] = useState({});
@@ -18,7 +20,7 @@ export function MapScreen() {
   const MAX_SPAN = 0.005 * 2;
   
   
-  function genFriendsMarkers() {
+  const FriendsMarkers = () => {
     if (coordinates == null) return null;
 
     // TODO: replace with real data
@@ -59,6 +61,64 @@ export function MapScreen() {
 
   }
 
+  const RecSliders = () => {
+    if (coordinates == null) return null;
+
+    function getDistanceFromMe(longitude, latitude) {
+      let dis = calGeoDistance(
+        {latitude: coordinates.latitude, longitude: coordinates.longitude},
+        {latitude: latitude, longitude: longitude},
+      );
+      return dis;
+    }
+
+    // TODO: replace with real data
+    const DATA = [
+      {
+        id: '1',
+        name: 'Pizza Royal',
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        img_uri: "https://wallpaperaccess.com/full/317501.jpg",
+      },
+      {
+        id: '2',
+        name: 'The Cafe',
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        img_uri: "https://wallpaperaccess.com/full/317501.jpg",
+      },
+      {
+        id: '3',
+        name: 'Zhongzhong Noodles',
+        longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
+        img_uri: "https://wallpaperaccess.com/full/317501.jpg",
+      },
+    ];
+
+    const renderItem = ({ item }) => (
+      <ScrollBizCard key={item.id} data={item}/>
+    );
+
+    DATA.forEach((item) => {
+      item.distance = getDistanceFromMe(item.longitude, item.latitude);
+    });
+  
+    const ItemSeparator = () => (
+      <Box w="5"/>
+    );
+
+    return <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={ItemSeparator}
+              data={DATA}
+              renderItem={renderItem}
+              keyExtractor={item => item.id}
+            />;
+  }
+
   
   
   
@@ -89,47 +149,7 @@ export function MapScreen() {
     console.log(coordinates.longitude);
   }, []);
 
-
-  // return (
-  //   <View style={styles.container}>
-  //     <MapView customMapStyle={mapStyle}provider={PROVIDER_GOOGLE}style={styles.mapStyle}
-  //       showsUserLocation={true}
-  //       followsUserLocation={true}
-  //       region={{
-  //         latitude: coordinates.latitude,
-  //         longitude: coordinates.longitude,
-  //         latitudeDelta: 0.01,
-  //         longitudeDelta: 0.01,
-  //       }}mapType="standard">
-  //         {genFriendsMarkers()}
-  //       </MapView>
-
-  //       <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
-  //         <View style={[buttonStyles.container]}>
-  //           <Button color="#FFFFFF"
-  //             title="Button1"
-  //             onPress={() => navigation.navigate('Detail')}
-  //           />
-  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
-  //         </View>
-  //         <View style={[buttonStyles.container]}>
-  //           <Button color="#FFFFFF"
-  //             title="Button1"
-  //             onPress={() => navigation.navigate('Detail')}
-  //           />
-  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
-  //         </View>
-  //         <View style={[buttonStyles.container]}>
-  //           <Button color="#FFFFFF"
-  //             title="Button1"
-  //             onPress={() => navigation.navigate('Detail')}
-  //           />
-  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
-  //         </View>
-  //       </View>
-        
-        
-  //   </View>);
+  
 
   return (
     <View style={styles.container}>
@@ -143,43 +163,48 @@ export function MapScreen() {
           longitudeDelta: 0.01,
         }}mapType="standard">
           { showFriends ?
-          genFriendsMarkers() : null}
+          <FriendsMarkers/> : null}
         </MapView>
+
+        <View style={{position: 'absolute', top: '65%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
+            {/* <MapviewSwitch/> */}
+            {<RecSliders/>}
+        </View>
 
         <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={switchStyles.container}>
             {/* <MapviewSwitch/> */}
-          <HStack >
-      <Pressable onPressOut={()=> {setShowFriends(!showFriends)}}>
-        {({
-        isPressed
-      }) => {
-        return <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
-        {
-            showFriends ? 
-            <Image source={require("../assets/icons/show_friends_on.png")} alt="show_friends_on" w={30} h={30}/>
-            :
-            <Image source={require("../assets/icons/show_friends_off.png")} alt="show_friends_off" w={30} h={30}/>
-        }
-        </Box>
-      }}
-      </Pressable>
-      <Spacer/>
-      <Pressable onPressOut={()=> {setShowRecs(!showRecs)}} bg="#FFFFFF">
-        {({
-        isPressed
-      }) => {
-        return <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
-        {
-            showRecs ? 
-            <Image source={require("../assets/icons/show_recs_on.png")} alt="show_recs_on" w={30} h={30}/>
-            :
-            <Image source={require("../assets/icons/show_recs_off.png")} alt="show_recs_off" w={30} h={30}/>
-        }
-        </Box>
-      }}
-      </Pressable>
-    </HStack>
+            <HStack >
+              <Pressable onPressOut={()=> {setShowFriends(!showFriends)}}>
+                {({
+                isPressed
+              }) => {
+                return <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                {
+                    showFriends ? 
+                    <Image source={require("../assets/icons/show_friends_on.png")} alt="show_friends_on" w={30} h={30}/>
+                    :
+                    <Image source={require("../assets/icons/show_friends_off.png")} alt="show_friends_off" w={30} h={30}/>
+                }
+                </Box>
+              }}
+              </Pressable>
+              <Spacer/>
+              <Pressable onPressOut={()=> {setShowRecs(!showRecs)}} bg="#FFFFFF">
+                {({
+                isPressed
+              }) => {
+                return <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                {
+                    showRecs ? 
+                    <Image source={require("../assets/icons/show_recs_on.png")} alt="show_recs_on" w={30} h={30}/>
+                    :
+                    <Image source={require("../assets/icons/show_recs_off.png")} alt="show_recs_off" w={30} h={30}/>
+                }
+                </Box>
+              }}
+              </Pressable>
+            </HStack>
           </View>
         </View>
         
