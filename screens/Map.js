@@ -4,9 +4,15 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { mapStyle } from './mapStyle';
 import * as Location from 'expo-location';
 import { getTimeDiff } from '../utils';
+import { HStack, Box, Pressable, Spacer } from 'native-base';
 
 export function MapScreen() {
   const [coordinates, setCoordinates] = useState({});
+
+  const [showFriends, setShowFriends] = useState(false);
+  // TODO: implemented recommended markers
+  const [showRecs, setShowRecs] = useState(false);
+
   const mapRef = useRef(null);
 
   const MAX_SPAN = 0.005 * 2;
@@ -84,6 +90,47 @@ export function MapScreen() {
   }, []);
 
 
+  // return (
+  //   <View style={styles.container}>
+  //     <MapView customMapStyle={mapStyle}provider={PROVIDER_GOOGLE}style={styles.mapStyle}
+  //       showsUserLocation={true}
+  //       followsUserLocation={true}
+  //       region={{
+  //         latitude: coordinates.latitude,
+  //         longitude: coordinates.longitude,
+  //         latitudeDelta: 0.01,
+  //         longitudeDelta: 0.01,
+  //       }}mapType="standard">
+  //         {genFriendsMarkers()}
+  //       </MapView>
+
+  //       <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
+  //         <View style={[buttonStyles.container]}>
+  //           <Button color="#FFFFFF"
+  //             title="Button1"
+  //             onPress={() => navigation.navigate('Detail')}
+  //           />
+  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
+  //         </View>
+  //         <View style={[buttonStyles.container]}>
+  //           <Button color="#FFFFFF"
+  //             title="Button1"
+  //             onPress={() => navigation.navigate('Detail')}
+  //           />
+  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
+  //         </View>
+  //         <View style={[buttonStyles.container]}>
+  //           <Button color="#FFFFFF"
+  //             title="Button1"
+  //             onPress={() => navigation.navigate('Detail')}
+  //           />
+  //           {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
+  //         </View>
+  //       </View>
+        
+        
+  //   </View>);
+
   return (
     <View style={styles.container}>
       <MapView customMapStyle={mapStyle}provider={PROVIDER_GOOGLE}style={styles.mapStyle}
@@ -95,31 +142,47 @@ export function MapScreen() {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}mapType="standard">
-          {genFriendsMarkers()}
+          { showFriends ?
+          genFriendsMarkers() : null}
         </MapView>
+
         <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={[buttonStyles.container]}>
-            <Button color="#FFFFFF"
-              title="Button1"
-              onPress={() => navigation.navigate('Detail')}
-            />
-            {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
-          </View>
-          <View style={[buttonStyles.container]}>
-            <Button color="#FFFFFF"
-              title="Button1"
-              onPress={() => navigation.navigate('Detail')}
-            />
-            {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
-          </View>
-          <View style={[buttonStyles.container]}>
-            <Button color="#FFFFFF"
-              title="Button1"
-              onPress={() => navigation.navigate('Detail')}
-            />
-            {/* <Image source={require('../assets/icons/detail.png')} style={{height: 50, width: 50}}/> */}
+          <View style={switchStyles.container}>
+            {/* <MapviewSwitch/> */}
+          <HStack >
+      <Pressable onPressOut={()=> {setShowFriends(!showFriends)}}>
+        {({
+        isPressed
+      }) => {
+        return <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+        {
+            showFriends ? 
+            <Image source={require("../assets/icons/show_friends_on.png")} alt="show_friends_on" w={30} h={30}/>
+            :
+            <Image source={require("../assets/icons/show_friends_off.png")} alt="show_friends_off" w={30} h={30}/>
+        }
+        </Box>
+      }}
+      </Pressable>
+      <Spacer/>
+      <Pressable onPressOut={()=> {setShowRecs(!showRecs)}} bg="#FFFFFF">
+        {({
+        isPressed
+      }) => {
+        return <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+        {
+            showRecs ? 
+            <Image source={require("../assets/icons/show_recs_on.png")} alt="show_recs_on" w={30} h={30}/>
+            :
+            <Image source={require("../assets/icons/show_recs_off.png")} alt="show_recs_off" w={30} h={30}/>
+        }
+        </Box>
+      }}
+      </Pressable>
+    </HStack>
           </View>
         </View>
+        
     </View>);
 }
 
@@ -147,5 +210,20 @@ const buttonStyles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+});
+
+const switchStyles = StyleSheet.create({
+  container: {
+    width: 100,
+    height: 50,
+    paddingLeft: 10,
+    paddingRight: 10, 
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
 });
