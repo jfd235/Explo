@@ -41,14 +41,26 @@ export function FriendsListView({ navigation }) {
             let out = [];
             onValue(starCountRef, (snapshot) => {
               const data = snapshot.val();
-              delete data['canAddFriends']
-              currentFriends = Object.keys(data)
+              // delete data['canAddFriends']
+              if (data) {
+                currentFriends = Object.keys(data)
+                // console.log(data)
 
-              currentFriends.map((key, idx) => {
-                out.push([key, new Date(data[key]['lastAct'])])
-              });
-              console.log(out);
-              setFriendsData(out);
+                console.log("Retrieve friends...")
+                currentFriends.map((key, idx) => {
+                    // console.log(data[key])
+                    let tempRef = ref(db, `users/${key}`);
+                    
+                    onValue(tempRef, (snapshotFriend) => {
+                        const friend = snapshotFriend.val();
+                        // console.log(friend)
+                        console.log([friend['name'], new Date(friend['lastAct'])])
+                        out.push([friend['name'], new Date(friend['lastAct'])])
+                    });
+                });
+                console.log(out);
+                setFriendsData(out);
+              }
             });
           }
         // const currTime = new Date();
@@ -70,8 +82,8 @@ export function FriendsListView({ navigation }) {
             </View>
             )
         }
-        console.log("not null")
-        console.log(friendsData.length)
+        // console.log("not null")
+        // console.log(friendsData.length)
 
         const activityList = friendsData.map((dataEntry) =>
             <HStack key={dataEntry[0]} justifyContent="space-between" alignItems="center" rounded="xl" w="100%" h={60} bg="#333333" p={2}>

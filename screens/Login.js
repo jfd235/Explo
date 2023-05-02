@@ -20,7 +20,7 @@ export function SignUpLogInComponent() {
           id: user.uid,
           email: email,
           name: '',
-          friends: {canAddFriends: true},
+        //   friends: {canAddFriends: true},
           lastAct: Date()
         }).then(() => {
           // Data saved successfully!

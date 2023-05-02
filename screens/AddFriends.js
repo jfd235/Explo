@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
-import { set, ref, onValue, query, equalTo, orderByChild} from "firebase/database";
+import { set, push, ref, onValue, query, equalTo, orderByChild} from "firebase/database";
 import { db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 import { FlatList } from "native-base";
@@ -27,13 +27,26 @@ export function AddFriends({ navigation: { goBack } }) {
       const starCountRef = ref(db, `users/${user.uid}/friends`);
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
-        delete data['canAddFriends']
-        console.log("data")
-        console.log(Object.keys(data))
-        currentFriends = Object.keys(data)
-        setFriends(currentFriends)
-        console.log("data filtered")
-        console.log(currentFriends)
+        // delete data['canAddFriends']
+        if (data) {
+          console.log("data")
+          console.log(data)
+          currentFriends = Object.keys(data);
+          let names = [];
+          currentFriends.map((key, idx) => {
+            let tempRef = ref(db, `users/${key}`);
+            onValue(tempRef, (snapshotFriend) => {
+                const friend = snapshotFriend.val();
+                // console.log(friend)
+                console.log(friend['name'])
+                names.push(friend['name'])
+            });
+          });
+          console.log(names)
+          setFriends(names)
+          console.log("data filtered")
+          console.log(currentFriends)
+        }
       });
     }
 
@@ -55,11 +68,12 @@ export function AddFriends({ navigation: { goBack } }) {
           const userId = Object.entries(data)[0][0]
 
           // This adds the friend to the users's friends list
-          set(ref(db, `users/${user.uid}/friends/${data[userId].name}`), {          
-            email: data[userId].email,
-            id: data[userId].id,
-            name: data[userId].name,
-            lastAct: data[userId].lastAct,
+          set(ref(db, `users/${user.uid}/friends/${userId}`), {          
+            // email: data[userId].email,
+            // id: data[userId].id,
+            // name: data[userId].name,
+            // lastAct: data[userId].lastAct,            
+            date: Date()
           }).then(() => {
             // Data saved successfully!
             alert('Friend Added!');
@@ -69,9 +83,9 @@ export function AddFriends({ navigation: { goBack } }) {
             alert(error);
           });
 
-          console.log(friends)
+          // console.log(friends)
 
-          friends.push(data[userId].name)
+          friends.push(data[userId])
         }
       });
     }
