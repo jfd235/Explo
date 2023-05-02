@@ -24,7 +24,8 @@ export function SignUpLogInComponent() {
           lastAct: Date()
         }).then(() => {
           // Data saved successfully!
-          alert('data updated!');
+          // alert('data updated!');
+          console.log("Data saved successfully!");
         })  
         .catch((error) => {
           // The write failed...
@@ -109,7 +110,8 @@ export function SignUpLogInComponent() {
                                     lastAct: Date()
                                   }).then(() => {
                                     // Data saved successfully!
-                                    alert('data updated!');
+                                    // alert('data updated!');
+                                    console.log("Data saved successfully!");
                                   })  
                                   .catch((error) => {
                                     // The write failed...
