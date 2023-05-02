@@ -87,7 +87,6 @@ export function ProfileScreen({ navigation: { goBack, navigate } }) {
         Alert.alert('Success', 'Uploaded profile picture!');
       });
       
-      await downloadProfileImage();
       goBack();
     }
 
