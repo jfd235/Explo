@@ -36,39 +36,36 @@ export function FriendsListView({ navigation }) {
           }, []);
 
         function readData() {
-        console.log("Reading data...")
-        const starCountRef = ref(db, `users/${user.uid}/friends`);
-        let out = [];
-        onValue(starCountRef, (snapshot) => {
-            const data = snapshot.val();
-            // delete data['canAddFriends']
-            if (data) {
-            currentFriends = Object.keys(data)
-            // console.log(data)
+            console.log("Reading data...")
+            const starCountRef = ref(db, `users/${user.uid}/friends`);
+            let out = [];
+            onValue(starCountRef, (snapshot) => {
+                const data = snapshot.val();
+                // delete data['canAddFriends']
+                if (data) {
+                currentFriends = Object.keys(data)
+                // console.log(data)
 
-            console.log("Retrieve friends...")
-            currentFriends.map((key, idx) => {
-                // console.log(data[key])
-                let tempRef = ref(db, `users/${key}`);
-                
-                onValue(tempRef, (snapshotFriend) => {
-                    const friend = snapshotFriend.val();
-                    // console.log(friend)
-                    console.log([friend['name'], new Date(friend['lastAct'])])
-                    out.push([friend['name'], new Date(friend['lastAct'])])
+                console.log("Retrieve friends...")
+                currentFriends.map((key, idx) => {
+                    // console.log(data[key])
+                    let tempRef = ref(db, `users/${key}`);
+                    
+                    onValue(tempRef, (snapshotFriend) => {
+                        const friend = snapshotFriend.val();
+                        // console.log(friend)
+                        console.log([friend['name'], new Date(friend['lastAct'])])
+                        out.push([friend['name'], new Date(friend['lastAct'])])
+                    });
                 });
+                console.log(out);
+                setFriendsData(out);
+                }
             });
-            console.log(out);
-            setFriendsData(out);
-            }
-        });
         }
         // const currTime = new Date();
         if (friendsData.length == 0)
         {
-            console.log("here")
-            console.log(friendsData)
-            // console.log(user)
             return (
             <View style={styles.container}>
                 <Text>No friends yet... Go add some!</Text>

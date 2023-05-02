@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Box, Text, VStack, Center, theme, Image, Heading, AspectRatio, HStack, Button, Pressable, Spacer } from "native-base";
 
 export default function ScrollBizCard(bizData) {
-  const {name, distance, img_uri} = bizData.data;
+  const [name, user, distance, img_uri] = bizData.data;
     return (
       <Pressable  onPress={() => {}}>
         {
           ({
             isPressed
           }) => {return (
-            <HStack space={2} paddingLeft={2} rounded="xl" alignItems="center" h={85} w={200} bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+            <HStack space={2} paddingLeft={2} paddingRight={2} rounded="xl" alignItems="center" h={85} bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
               <AspectRatio ratio={1 / 1} height={60}>
                 <Image source={{uri : img_uri}} alt='placeholder image for restaurant' rounded="xl"/>
               </AspectRatio>
             <VStack alignItems="flex-start">
-              <Text italic fontSize="lg" numberOfLines={1} ellipsizeMode="tail">
+              <Text italic fontSize="lg" numberOfLines={2} ellipsizeMode="tail">
+                {user}:
+                {'\n'}
                 {name}
               </Text>
               <HStack>

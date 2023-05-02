@@ -8,7 +8,7 @@ import { HStack, Box, Pressable, Spacer, ScrollView, FlatList, Text } from 'nati
 import ScrollBizCard from '../components/ScrollBizCard';
 import { calGeoDistance } from '../utils';
 import { db } from "../firebaseConfig";
-import { ref, push, set } from 'firebase/database'
+import { ref, push, set, onValue } from 'firebase/database'
 import { getUserVariable } from '../UserContext';
 
 export function MapScreen() {
@@ -63,28 +63,28 @@ export function MapScreen() {
       ]
       
 
-      return friendsData.map((friendMarker, index) => 
+      return markers.map((friendMarker, index) => 
         <Marker
           key={index}
           image={require("../assets/icons/marker.png")}
-          coordinate={{latitude: friendMarker.latitude, longitude: friendMarker.longitude}}
-          title={friendMarker.name}
-          description={getTimeDiff(friendMarker.lastAct)} 
+          coordinate={{latitude: friendMarker[3], longitude: friendMarker[2]}}
+          title={friendMarker[5] + ": " + friendMarker[1]}
+          description={getTimeDiff(new Date(friendMarker[6]))} 
         />
       );
 
     }
 
+    function getDistanceFromMe(longitude, latitude) {
+      let dis = calGeoDistance(
+        {latitude: coordinates.latitude, longitude: coordinates.longitude},
+        {latitude: latitude, longitude: longitude},
+      );
+      return dis;
+    }
     const RecSliders = () => {
       if (coordinates == null) return null;
 
-      function getDistanceFromMe(longitude, latitude) {
-        let dis = calGeoDistance(
-          {latitude: coordinates.latitude, longitude: coordinates.longitude},
-          {latitude: latitude, longitude: longitude},
-        );
-        return dis;
-      }
 
       // TODO: replace with real data
       const DATA = [
@@ -112,12 +112,13 @@ export function MapScreen() {
       ];
 
       const renderItem = ({ item }) => (
-        <ScrollBizCard key={item.id} data={item}/>
+        // console.log("item", item.slice(1, 4))
+        <ScrollBizCard key={item[0]} data={[item[1], item[5], getDistanceFromMe(item[2], item[3]), item[4]]}/>
       );
 
-      DATA.forEach((item) => {
-        item.distance = getDistanceFromMe(item.longitude, item.latitude);
-      });
+      // markers.forEach((item) => {
+      //   item.push(getDistanceFromMe(item[2], item[3]));
+      // });
     
       const ItemSeparator = () => (
         <Box w="5"/>
@@ -127,9 +128,9 @@ export function MapScreen() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={ItemSeparator}
-                data={DATA}
+                data={markers}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item[0]}
               />;
     }
 
@@ -141,12 +142,12 @@ export function MapScreen() {
       // console.log(currTime.getTime())
       // console.log(Date(currTime.getTime() - (0 * 60 * 60 * 1000)))
       // const data = {
-      //   name : "Starbucks",
-      //   latitude: 40.759366980646455,
-      //   longitude: -73.95292494096424,
-      //   image_uri: "https://lh5.googleusercontent.com/p/AF1QipNVsaX5GV8bfaLGT7Or8zPpih5cd11pMDdxgvA1=w426-h240-k-no"
+      //   name : "Granny Annie's Bar & Kitchen",
+      //   latitude: 40.75863439838801,
+      //   longitude: -73.95280781507101,
+      //   image_uri: "https://lh5.googleusercontent.com/p/AF1QipNjTCMLfSUmeSIRasBhJJz0ULGlg26OkeT0Wi_a=w408-h541-k-no"
       // };
-      set(ref(db, 'users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUPzrnuPfKrHXCDqAPT'),
+      set(ref(db, 'users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUSdca7SAuAeHAZTXAp'),
         convert
       ).then(() => {
         // Data saved successfully!
@@ -172,26 +173,29 @@ export function MapScreen() {
         let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Lowest}); // Accuracy.Balanced
         const { latitude, longitude } = location.coords;
         setCoordinates({ latitude, longitude });
-        console.log(latitude)
-        console.log(longitude)
-        console.log("findCoordinates");
-        return coordinates
+        // console.log(latitude)
+        // console.log(longitude)
+        // console.log("findCoordinates");
       }
     }
-
-    useEffect(() => {
-      findCoordinates().then((coordinates) => {
-        console.log("useEffect");
-        console.log(coordinates.latitude);
-        console.log(coordinates.longitude);
-        // Uncomment below lines to manually add data to database
-        // console.log("Forcing data...")
-        // forceData();
-        // console.log("Forced data added")
+    const readData = async (uid) => {
+      if (!uid) {
+        return null;
+      }
+      console.log("Reading data...")
+      console.log(uid)
+      const starCountRef = ref(db, `users/${uid}`);
+      let name = null;
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        // delete data['canAddFriends']
+        console.log("user name", data.name)
+        name = data.name;
       });
-    }, []);
+      return name;
+    }
 
-    function readData() {
+    const findFriends = async () => {
       console.log("Reading data...")
       const starCountRef = ref(db, `users/${user.uid}/friends`);
       let out = [];
@@ -204,21 +208,60 @@ export function MapScreen() {
 
           console.log("Retrieve friends...")
           currentFriends.map((key, idx) => {
-              // console.log(data[key])
-              let tempRef = ref(db, `users/${key}`);
-              
-              onValue(tempRef, (snapshotFriend) => {
-                  const friend = snapshotFriend.val();
-                  // console.log(friend)
-                  console.log([friend['name'], new Date(friend['lastAct'])])
-                  out.push([friend['name'], new Date(friend['lastAct'])])
-              });
+            // console.log(data[key])
+            let tempRef = ref(db, `users/${key}/locations`);            
+            onValue(tempRef, (snapshotFriend) => {
+              const locations = snapshotFriend.val();
+              if (locations) {
+                // console.log("locations", locations)
+                const locationKeys = Object.keys(locations)
+                // console.log([friend['name'], new Date(friend['lastAct'])])
+                // out.push([friend['name'], new Date(friend['lastAct'])])
+                locationKeys.map((locationKey, idx2) => {
+                  const locationRef = ref(db, `locations/${locationKey}`);
+                  // console.log("locationKey", locationKey)
+                  onValue(locationRef, (snapshotLocation) => {
+                    const locationData = snapshotLocation.val();
+                    // console.log("locationData", locationData)
+                    let nameRef = ref(db, `users/${key}`); 
+                    onValue(nameRef, (snapshotName) => {
+                      const userName = snapshotName.val()['name'];
+                      // console.log("found name", userName)
+                      out.push([locationKey,
+                        locationData.name,
+                        locationData.longitude,
+                        locationData.latitude,
+                        locationData.image_uri,
+                        userName, // Username of friend
+                        locations[locationKey], // Time of location visit
+                      ]);
+                    });
+                  });
+                });
+              }
+            });
           });
-          console.log(out);
-          setFriendsData(out);
-          }
+          // console.log("setting markers", out);
+          setMarkers(out);
+        }
       });
     }
+
+    useEffect(() => {
+      findCoordinates().then(() => {
+        console.log("Current location");
+        console.log(coordinates.latitude);
+        console.log(coordinates.longitude);
+
+        // Uncomment below lines to manually add data to database
+        // console.log("Forcing data...")
+        // forceData();
+        // console.log("Forced data added")
+      });
+      findFriends().then(() => {
+        console.log("Friends found")
+      });
+    }, []);
 
     return (
       <View style={styles.container}>
