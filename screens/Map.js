@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Dimensions, Button, Image } from "react-native";
+import React, { useState, useEffect, useRef, componentDidMount, useCallback } from "react";
+import { StyleSheet, View, Dimensions, Button, Image, Alert } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { mapStyle } from "./mapStyle";
 import * as Location from "expo-location";
@@ -18,14 +18,16 @@ import { calGeoDistance } from "../utils";
 
 export function MapScreen() {
   const [coordinates, setCoordinates] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const [showFriends, setShowFriends] = useState(false);
-  // TODO: implemented recommended markers
+  // TODO: implement recommended markers
   const [showRecs, setShowRecs] = useState(false);
 
   // API:
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+  
 
   const mapRef = useRef(null);
 
@@ -212,14 +214,15 @@ export function MapScreen() {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = () => {
     const { latitude, longitude } = coordinates;
     fetch(
       `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&type=restaurant&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        // console.log(responseJson);
+        console.log("results: ", responseJson.results);
         const promises = responseJson.results.map(async (restaurant) => {
           try {
             const response = await fetch(
@@ -227,6 +230,7 @@ export function MapScreen() {
             );
             const detailsJson = await response.json();
             const photo = detailsJson.result?.photos?.[0];
+            console.log("detail: " + detailsJson);
             return {
               ...restaurant,
               photoUrl: photo
@@ -235,12 +239,14 @@ export function MapScreen() {
             };
           } catch (error) {
             console.error(error);
+            console.log("error rest:" + restaurant);
             return restaurant;
           }
         });
-        Promise.all(promises).then((restaurantsWithPhotos) => {
-          setRestaurants(
-            restaurantsWithPhotos.map((result) => ({
+        Promise.all(promises).then(
+          (restaurantsWithPhotos) => {
+            console.log("rest data with photo: " + restaurantsWithPhotos);
+            const restaurantData = restaurantsWithPhotos.map((result) => ({
               id: result.place_id,
               name: result.name,
               location: {
@@ -248,23 +254,36 @@ export function MapScreen() {
                 longitude: result.geometry.location.lng,
               },
               address: result.vicinity,
-            }))
-          );
-        });
-      })
-
+            }));
+            console.log("rest data: " + restaurantData);
+            setRestaurants(restaurantData);
+          });})
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
+      console.log("finished fetching data");
+      console.log(restaurants);
+      console.log(isLoading);
   };
+
 
   useEffect(() => {
     findCoordinates();
-    fetchData(); // is this right to put this here? - Jenny
+    // fetchData(); // is this right to put this here? - Jenny
     console.log("useEffect");
     console.log(coordinates.latitude);
     console.log(coordinates.longitude);
   }, []);
+
+  useEffect(() => {
+    if (coordinates.longitude == undefined || coordinates.latitude == undefined) return; 
+    fetchData();
+  }, [coordinates])
+
+  
 
   return (
     <View style={styles.container}>
@@ -283,13 +302,13 @@ export function MapScreen() {
         mapType="standard"
       >
         {showFriends ? <FriendsMarkers /> : null}
-        {restaurants.map((restaurant) => (
+        {(!isLoading) ? restaurants.map((restaurant) => (
           <Marker
             key={restaurant.place_id}
             coordinate={restaurant.location}
             onPress={() => setSelectedRestaurant(restaurant)}
           />
-        ))}
+        )) : null}
       </MapView>
 
       {/* // This UI definitely can be improved. I was using <Modal> earlier. - Jenny */}
