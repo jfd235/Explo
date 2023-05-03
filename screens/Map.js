@@ -145,7 +145,7 @@ export function MapScreen({ navigation }) {
       //   longitude: -73.95280781507101,
       //   image_uri: "https://lh5.googleusercontent.com/p/AF1QipNjTCMLfSUmeSIRasBhJJz0ULGlg26OkeT0Wi_a=w408-h541-k-no"
       // };
-      set(ref(db, 'users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUSdca7SAuAeHAZTXAp'),
+      push(ref(db, 'users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUSdca7SAuAeHAZTXAp'),
         convert
       ).then(() => {
         // Data saved successfully!
