@@ -82,21 +82,21 @@ export function MapScreen({ navigation }) {
         },
       ]
       
-
-      return markers.map((friendMarker, index) => (
-        // console.log(friendMarker)
-        <Marker
-          key={index}
-          image={require("../assets/icons/marker.png")}
-          coordinate={{
-            latitude: friendMarker.location.latitude,
-            longitude: friendMarker.location.longitude,
-          }}
-          title={friendMarker.userName}
-          description={getTimeDiff(new Date(friendMarker.lastAct))}
-        />
-      ));
-
+      if (markers.length != 0) {
+        return markers.map((friendMarker, index) => (
+          // console.log(friendMarker)
+          <Marker
+            key={index}
+            image={require("../assets/icons/marker.png")}
+            coordinate={{
+              latitude: friendMarker.location.latitude,
+              longitude: friendMarker.location.longitude,
+            }}
+            title={friendMarker.userName}
+            description={getTimeDiff(new Date(friendMarker.lastAct))}
+          />
+        ));
+      }
     }
 
     function getDistanceFromMe(longitude, latitude) {
