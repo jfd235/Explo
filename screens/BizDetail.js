@@ -1,110 +1,201 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Text, VStack, Center, theme, Image, Heading, AspectRatio, HStack, Pressable, Button } from "native-base";
-import StarRating from 'react-native-star-rating-widget';
-import ReviewCard from '../components/ReviewCard';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Text,
+  VStack,
+  Center,
+  theme,
+  Image,
+  Heading,
+  AspectRatio,
+  HStack,
+  Pressable,
+  Button,
+  ScrollView,
+} from "native-base";
+import StarRating from "react-native-star-rating-widget";
+import ReviewCard from "../components/ReviewCard";
+import { Linking } from "react-native";
 
-function onCheckinButtonPressed() {
+function onCheckinButtonPressed(navigation, bizData) {
   console.log("checked in");
+  navigation.navigate("CheckIn", { bizData });
 }
 
-
-function onCallButtonPressed() {
+const onCallButtonPressed = (phoneNumber) => {
   console.log("call the biz");
-}
+  Linking.openURL(`tel:${phoneNumber}`);
+};
 
-function onWebButtonPressed() {
-  console.log("go to the biz website");
-}
-
-function linkToReviewPage() {
-  console.log("go to the biz website");
-}
+const onWebButtonPressed = (website) => {
+  try {
+    Linking.openURL(`${website}`);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 // TODO: remove background highlighting
 
-export function BizDetail() {
+export function BizDetail({ navigation, route }) {
+  console.log("details props:", route.params);
+  const bizData =
+    route.params != undefined
+      ? route.params.bizData
+      : {
+          address: "422 Geary Street, San Francisco",
+          id: "ChIJZ3qrUY6AhYARCmurUXI6SNA",
+          imgUrl:
+            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=AZose0kuHeTua3KQIYDjWfMdQgI0hnWf-BAbFKa2mH7V9smCAWeeOZtM-uCMAvOyFbMeWfxDrMv3Xm6F7Q1q_zz9VbttVe2w6mBPzx-uhiNhUMDY8b5Nt5U35MotG2bL_U89RgPa9NT5NUInuGZNrcZRg2YYghJdXK8xuoSqWEoLrCAWO3U2&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs",
+          location: { latitude: 37.7872028, longitude: -122.4104472 },
+          name: "Katana Ya",
+          reviews: [
+            {
+              username: "John Doe",
+              rating: 5,
+              text: "Best place I have ever been!",
+            },
+            {
+              username: "John Doe",
+              rating: 5,
+              text: "Best place I have ever been!",
+            },
+            {
+              username: "John Doe",
+              rating: 5,
+              text: "Best place I have ever been!",
+            },
+          ],
+          phoneNumber: 1234567890,
+          website: "www.google.com",
+          priceLevel: 1,
+          rating: 4,
+        };
 
-    const dollarSignComponents = Array.from({ length: 3 }, (_, index) => (
+  const dollarSignComponents = (priceLevel) =>
+    Array.from({ length: priceLevel }, (_, index) => (
       <Text key={index}>$</Text>
     ));
 
-    // TODO: replace with real data
-    const bizName = "Pizza Royal";
-    const addr = "1 E Loop Rd, New York, NY, 10044";
-    const reviewData = {
-      username: "John Doe",
-      rating: 5,
-      text: "Best place I have ever been!"
-    };
+  const {
+    name,
+    address,
+    imgUrl,
+    reviews,
+    priceLevel,
+    phoneNumber,
+    website,
+    rating,
+  } = bizData;
 
-
-    return (
-        <VStack space={6} justifyContent="center" paddingTop={5}>
-          <Center>
-            <AspectRatio ratio={2 / 1} height={160}>
-              <Image source={{uri : "https://wallpaperaccess.com/full/317501.jpg"}} alt='placeholder image for restaurant' rounded="xl"/>
-            </AspectRatio>
-          </Center>
-          <VStack p="4" space={4} alignItems="flex-start" bg={theme.colors.tertiary[100]} >
-            <Heading> Pizza Royal </Heading>
-            <HStack justifyContent="space-around" bg={theme.colors.tertiary[300]} width="100%"> 
-              <StarRating
-                maxStars={5}
-                rating={4}
-                starSize={16}
-                selectedStar={(rating) => {}}
-              />
-              <Box bg={theme.colors.tertiary[900]}>
-                <Text>
-                    {bizName}
-                </Text>
-              </Box>
-            </HStack>
-            <HStack bg={theme.colors.tertiary[600]} paddingLeft={28} space="0" > 
-              {dollarSignComponents}
-            </HStack>
-            <Text>
-              {addr}
-            </Text>
-            <HStack bg={theme.colors.tertiary[500]} paddingLeft={28} paddingRight={28} width="100%" justifyContent="space-between"> 
-            <Pressable onPress={onCheckinButtonPressed}>
+  return (
+    <VStack space={6} justifyContent="center" paddingTop={5}>
+      <Center>
+        <AspectRatio ratio={2 / 1} height={170}>
+          <Image
+            source={{ uri: imgUrl }}
+            alt="placeholder image for restaurant"
+            rounded="xl"
+          />
+        </AspectRatio>
+      </Center>
+      <VStack
+        paddingLeft="6"
+        paddingRight="6"
+        paddingTop="3"
+        space={3}
+        alignItems="flex-start"
+      >
+        <Heading> {name} </Heading>
+        <HStack justifyContent="flex-start" width="100%">
+          <StarRating
+            maxStars={5}
+            rating={rating}
+            starSize={16}
+            selectedStar={(rating) => {}}
+          />
+        </HStack>
+        <HStack paddingLeft={28} space="0">
+          {dollarSignComponents(priceLevel)}
+        </HStack>
+        <Text>{address}</Text>
+        <HStack
+          // bg={theme.colors.tertiary[500]}
+          paddingLeft={28}
+          paddingRight={28}
+          width="100%"
+          justifyContent="space-around"
+        >
+          <Pressable
+            onPress={() => {
+              onCheckinButtonPressed(navigation, bizData);
+            }}
+          >
+            <VStack alignItems="center">
               <Image
-                source={require('../assets/icons/shop.png')}
+                source={require("../assets/icons/shop.png")}
                 fadeDuration={0}
                 style={{ width: 50, height: 50 }}
                 alt="check in to the biz"
               />
-            </Pressable>
-            <Pressable onPress={onCallButtonPressed}>
+              <Text italic fontSize="sm" color="#333333">
+                Check-in
+              </Text>
+            </VStack>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              onCallButtonPressed(phoneNumber);
+            }}
+          >
+            <VStack alignItems="center">
               <Image
-                source={require('../assets/icons/call.png')}
+                source={require("../assets/icons/call.png")}
                 fadeDuration={0}
                 style={{ width: 50, height: 50 }}
                 alt="call the biz"
               />
-            </Pressable>
-            <Pressable onPress={onWebButtonPressed}>
+              <Text italic fontSize="sm" color="#333333">
+                Call
+              </Text>
+            </VStack>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              onWebButtonPressed(website);
+            }}
+          >
+            <VStack alignItems="center">
               <Image
-                source={require('../assets/icons/web.png')}
+                source={require("../assets/icons/web.png")}
                 fadeDuration={0}
                 style={{ width: 50, height: 50 }}
                 alt="go to the biz website"
               />
-            </Pressable>
-            </HStack>
-
-            <HStack bg={theme.colors.tertiary[500]} paddingLeft={28} paddingRight={28} width="100%" justifyContent="space-between"> 
-              <Text>Reviews</Text>
-
-              <Button onPress={linkToReviewPage}>
-                <Text>Write a review</Text>
-              </Button>
-            </HStack>
-
-            <VStack bg={theme.colors.tertiary[400]} p={5} width="100%">
-              <ReviewCard data={reviewData}/>
+              <Text italic fontSize="sm" color="#333333">
+                Website
+              </Text>
             </VStack>
-          </VStack>
+          </Pressable>
+        </HStack>
+
+        <HStack
+          bg={theme.colors.tertiary[500]}
+          paddingLeft={28}
+          paddingRight={28}
+          width="100%"
+          justifyContent="flex-start"
+        >
+          <Text fontSize="xl">Reviews</Text>
+        </HStack>
+
+        <VStack bg={theme.colors.tertiary[400]} p={5} width="100%" height="40%">
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {reviews &&
+              reviews.map((reviewData) => <ReviewCard data={reviewData} key={reviewData.time} />)}
+          </ScrollView>
         </VStack>
-    );
-  }
+      </VStack>
+    </VStack>
+  );
+}

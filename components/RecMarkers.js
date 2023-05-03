@@ -14,7 +14,7 @@ export function RecMarkers(props) {
           longitude: rest.location.longitude,
         }}
         onPress={(e) => {
-            console.log("pressed: ", e.nativeEvent);
+            console.log("pressed: ", rest);
         }}
       > 
         <Callout title={rest.name}

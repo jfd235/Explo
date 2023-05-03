@@ -70,7 +70,7 @@ export default function ScrollBizCard(props) {
                 isTruncated
                 italic
                 fontSize="md"
-                numberOfLines={2}
+                numberOfLines={1}
                 ellipsizeMode="tail"
               >
                 {name}

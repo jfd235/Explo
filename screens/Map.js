@@ -7,7 +7,7 @@ import {
   Image,
   Alert,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { mapStyle } from './mapStyle';
 import * as Location from 'expo-location';
 import { getTimeDiff } from '../utils';
@@ -56,45 +56,41 @@ export function MapScreen({ navigation }) {
   
     const FriendsMarkers = () => {
       if (coordinates == null) return null;
-
-      // TODO: replace with real data
-      const currTime = new Date();
-      const friendsData = [
-        { name: "Haohua", 
-          lastAct: currTime.getTime() - (4 * 60 * 60 * 1000),
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-        },
-        { name: "Jenny", 
-          lastAct: currTime.getTime() - (2 * 60 * 60 * 1000 * 24),
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-        },
-        { name: "Ken", 
-          lastAct: currTime.getTime() - (6 * 60 * 60 * 1000 * 24),
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-        },
-        { name: "Gordon", 
-          lastAct: currTime.getTime() - (3 * 60 * 60 * 1000 * 24),
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-        },
-      ]
       
       if (markers.length != 0) {
         return markers.map((friendMarker, index) => (
           // console.log(friendMarker)
           <Marker
-            key={index}
+            key={friendMarker.id}
             image={require("../assets/icons/marker.png")}
             coordinate={{
               latitude: friendMarker.location.latitude,
               longitude: friendMarker.location.longitude,
             }}
-            title={friendMarker.userName}
-            description={getTimeDiff(new Date(friendMarker.lastAct))}
-          />
+            onPress={(e) => {
+              console.log("pressed: ", friendMarker.lastAct);
+          }}
+            // title={friendMarker.userName + ': ' + friendMarker.name}
+            // description={getTimeDiff(new Date(friendMarker.lastAct))}
+          >
+              <Callout
+                onPress={() => {
+                  onBizCardPressedOut(friendMarker)
+                  console.log("pressed")
+                }}>
+                  <Text
+                    isTruncated
+                    italic
+                    fontSize="md"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    paddingLeft={2}
+                  >
+                    {`${friendMarker.userName} was here ${getTimeDiff(new Date(friendMarker.lastAct))}`}
+                  </Text>
+                  <ScrollBizCard bizData={friendMarker} userLocation={coordinates}/>
+              </Callout>
+          </Marker>
         ));
       }
     }
@@ -106,13 +102,8 @@ export function MapScreen({ navigation }) {
       );
       return dis;
     }
-    const RecSliders = () => {
+    const RecSliders = ({data}) => {
       if (coordinates == null) return null;
-
-
-      // TODO: replace with real data
-      let DATA = [...restaurants];
-      // console.log("here", restaurants)
 
       const renderItem = ({ item }) => (
         <ScrollBizCard
@@ -135,7 +126,7 @@ export function MapScreen({ navigation }) {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={ItemSeparator}
-                data={markers}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
               />;
@@ -309,7 +300,7 @@ export function MapScreen({ navigation }) {
     const fetchData = () => {
       const { latitude, longitude } = coordinates;
       fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&type=restaurant&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=800&type=restaurant&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
       )
         .then((response) => response.json())
         .then((responseJson) => {
@@ -366,9 +357,11 @@ export function MapScreen({ navigation }) {
 
     useEffect(() => {
       findCoordinates().then(() => {
-        console.log("Current location");
-        console.log(coordinates.latitude);
-        console.log(coordinates.longitude);
+        if(coordinates) {
+          console.log("Current location");
+          console.log(coordinates.latitude);
+          console.log(coordinates.longitude);
+        }
 
         // Uncomment below lines to manually add data to database
         // console.log("Forcing data...")
@@ -429,7 +422,8 @@ export function MapScreen({ navigation }) {
           }}
         >
           {/* <MapviewSwitch/> */}
-          {!showRecs && <RecSliders />}
+          {showRecs && <RecSliders data={restaurants} />}
+          {showFriends && <RecSliders data={markers} />}
         </View>
   
         <View
@@ -447,6 +441,7 @@ export function MapScreen({ navigation }) {
             <HStack>
               <Pressable
                 onPressOut={() => {
+                  setShowRecs(false);
                   setShowFriends(!showFriends);
                 }}
               >
@@ -475,6 +470,7 @@ export function MapScreen({ navigation }) {
               <Spacer />
               <Pressable
                 onPressOut={() => {
+                  setShowFriends(false);
                   setShowRecs(!showRecs);
                 }}
                 bg="#FFFFFF"
