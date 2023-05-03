@@ -1,23 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Dimensions, Button, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Button,
+  Image,
+  Alert,
+} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { mapStyle } from './mapStyle';
 import * as Location from 'expo-location';
 import { getTimeDiff } from '../utils';
-import { HStack, Box, Pressable, Spacer, ScrollView, FlatList, Text } from 'native-base';
+import {
+  HStack,
+  Box,
+  Pressable,
+  Spacer,
+  ScrollView,
+  FlatList,
+  Text,
+} from "native-base";
 import ScrollBizCard from '../components/ScrollBizCard';
 import { calGeoDistance } from '../utils';
 import { db } from "../firebaseConfig";
 import { ref, push, set, onValue } from 'firebase/database'
 import { getUserVariable } from '../UserContext';
+import { RecMarkers } from "../components/RecMarkers";
 
-export function MapScreen() {
-  const [coordinates, setCoordinates] = useState({});
-
+export function MapScreen({ navigation }) {
+  const [coordinates, setCoordinates] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
   const [showFriends, setShowFriends] = useState(false);
-  // TODO: implemented recommended markers
   const [showRecs, setShowRecs] = useState(false);
   const [markers, setMarkers] = useState({});
+
+  // API:
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [restaurants, setRestaurants] = useState([]);
 
   const mapRef = useRef(null);
 
@@ -63,15 +83,19 @@ export function MapScreen() {
       ]
       
 
-      return markers.map((friendMarker, index) => 
+      return markers.map((friendMarker, index) => (
+        // console.log(friendMarker)
         <Marker
           key={index}
           image={require("../assets/icons/marker.png")}
-          coordinate={{latitude: friendMarker[3], longitude: friendMarker[2]}}
-          title={friendMarker[5] + ": " + friendMarker[1]}
-          description={getTimeDiff(new Date(friendMarker[6]))} 
+          coordinate={{
+            latitude: friendMarker.location.latitude,
+            longitude: friendMarker.location.longitude,
+          }}
+          title={friendMarker.userName}
+          description={getTimeDiff(new Date(friendMarker.lastAct))}
         />
-      );
+      ));
 
     }
 
@@ -87,33 +111,16 @@ export function MapScreen() {
 
 
       // TODO: replace with real data
-      const DATA = [
-        {
-          id: '1',
-          name: 'Pizza Royal',
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          img_uri: "https://wallpaperaccess.com/full/317501.jpg",
-        },
-        {
-          id: '2',
-          name: 'The Cafe',
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          img_uri: "https://wallpaperaccess.com/full/317501.jpg",
-        },
-        {
-          id: '3',
-          name: 'Zhongzhong Noodles',
-          longitude: (coordinates.longitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          latitude: (coordinates.latitude - MAX_SPAN + MAX_SPAN * Math.random()).toFixed(5),
-          img_uri: "https://wallpaperaccess.com/full/317501.jpg",
-        },
-      ];
+      let DATA = [...restaurants];
+      // console.log("here", restaurants)
 
       const renderItem = ({ item }) => (
-        // console.log("item", item.slice(1, 4))
-        <ScrollBizCard key={item[0]} data={[item[1], item[5], getDistanceFromMe(item[2], item[3]), item[4]]}/>
+        <ScrollBizCard
+          key={item.id}
+          bizData={item}
+          userLocation={coordinates}
+          onBizCardPressedOut={onBizCardPressedOut}
+        />
       );
 
       // markers.forEach((item) => {
@@ -130,7 +137,7 @@ export function MapScreen() {
                 ItemSeparatorComponent={ItemSeparator}
                 data={markers}
                 renderItem={renderItem}
-                keyExtractor={item => item[0]}
+                keyExtractor={item => item.id}
               />;
     }
 
@@ -218,34 +225,144 @@ export function MapScreen() {
                 // console.log([friend['name'], new Date(friend['lastAct'])])
                 // out.push([friend['name'], new Date(friend['lastAct'])])
                 locationKeys.map((locationKey, idx2) => {
-                  const locationRef = ref(db, `locations/${locationKey}`);
-                  // console.log("locationKey", locationKey)
-                  onValue(locationRef, (snapshotLocation) => {
-                    const locationData = snapshotLocation.val();
-                    // console.log("locationData", locationData)
-                    let nameRef = ref(db, `users/${key}`); 
-                    onValue(nameRef, (snapshotName) => {
-                      const userName = snapshotName.val()['name'];
-                      // console.log("found name", userName)
-                      out.push([locationKey,
-                        locationData.name,
-                        locationData.longitude,
-                        locationData.latitude,
-                        locationData.image_uri,
-                        userName, // Username of friend
-                        locations[locationKey], // Time of location visit
-                      ]);
+                  // const locationRef = ref(db, `locations/${locationKey}`);
+                  // // console.log("locationKey", locationKey)
+                  // onValue(locationRef, (snapshotLocation) => {
+                  //   const locationData = snapshotLocation.val();
+                  //   // console.log("locationData", locationData)
+                  let nameRef = ref(db, `users/${key}`); 
+                  onValue(nameRef, (snapshotName) => {
+                    const userName = snapshotName.val()['name'];
+                    console.log("found name", userName)
+                    fetch(
+                      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${locationKey}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                    ).then((response) => response.json())
+                    .then((responseJson) => {
+                      const photo = responseJson.result?.photos?.[0];
+                      const result = {
+                        ...responseJson.result,
+                        photoUrl: photo
+                          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                          : undefined,
+                        reviews: responseJson.result.reviews,
+                        formatted_phone_number: responseJson.result.formatted_phone_number,
+                        website: responseJson.result.website,
+                        price_level: responseJson.result.price_level,
+                        rating: responseJson.result.rating,
+                      };
+                      // console.log("result", result)
+                      const restaurantData = {
+                        id: result.place_id,
+                        name: result.name,
+                        location: {
+                          latitude: result.geometry.location.lat,
+                          longitude: result.geometry.location.lng,
+                        },
+                        address: result.vicinity,
+                        imgUrl: result.photoUrl,
+                        reviews: result.reviews,
+                        phoneNumber: result.formatted_phone_number,
+                        website: result.website,
+                        priceLevel: result.price_level,
+                        rating: result.rating,
+                        userName: userName,
+                        lastAct: locations[locationKey].lastAct,
+                      };
+                      console.log("result location", restaurantData.location)
+                      out.push(restaurantData);
+                    }).then(() => {
+                      console.log("setting markers", out);
+                      setMarkers(out);
                     });
                   });
                 });
               }
             });
           });
-          // console.log("setting markers", out);
-          setMarkers(out);
         }
       });
     }
+    
+    const getPlaceData = async (place_id) => {
+      fetch(
+        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+      ).then((response) => {
+        const restaurantData = {
+          id: result.place_id,
+          name: result.name,
+          location: {
+            latitude: result.geometry.location.lat,
+            longitude: result.geometry.location.lng,
+          },
+          address: result.vicinity,
+          imgUrl: result.photoUrl,
+          reviews: result.reviews,
+          phoneNumber: result.formatted_phone_number,
+          website: result.website,
+          priceLevel: result.price_level,
+          rating: result.rating,
+        };
+        return restaurantData;
+      });
+    };
+
+    const fetchData = () => {
+      const { latitude, longitude } = coordinates;
+      fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&type=restaurant&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+      )
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // console.log("responseJsonRes", responseJson.results)
+          const promises = responseJson.results.map(async (restaurant) => {
+            try {
+              const response = await fetch(
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+              );
+              const detailsJson = await response.json();
+              const photo = detailsJson.result?.photos?.[0];
+              return {
+                ...restaurant,
+                photoUrl: photo
+                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                  : undefined,
+                reviews: detailsJson.result.reviews,
+                formatted_phone_number: detailsJson.result.formatted_phone_number,
+                website: detailsJson.result.website,
+                price_level: detailsJson.result.price_level,
+                rating: detailsJson.result.rating,
+              };
+            } catch (error) {
+              console.error(error);
+              return restaurant;
+            }
+          });
+          Promise.all(promises).then((restaurantsWithPhotos) => {
+            const restaurantData = restaurantsWithPhotos.map((result) => ({
+              id: result.place_id,
+              name: result.name,
+              location: {
+                latitude: result.geometry.location.lat,
+                longitude: result.geometry.location.lng,
+              },
+              address: result.vicinity,
+              imgUrl: result.photoUrl,
+              reviews: result.reviews,
+              phoneNumber: result.formatted_phone_number,
+              website: result.website,
+              priceLevel: result.price_level,
+              rating: result.rating,
+            }));
+            setRestaurants(restaurantData);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    };
 
     useEffect(() => {
       findCoordinates().then(() => {
@@ -263,63 +380,130 @@ export function MapScreen() {
       });
     }, []);
 
+    useEffect(() => {
+      if (coordinates == null || coordinates.longitude == undefined || coordinates.latitude == undefined)
+        return;
+      fetchData();
+    }, [coordinates]);
+  
+    const onBizCardPressedOut = (bizData) => {
+      navigation.navigate("Detail", { bizData });
+    };
+
     return (
       <View style={styles.container}>
-        <MapView customMapStyle={mapStyle}provider={PROVIDER_GOOGLE}style={styles.mapStyle}
-          showsUserLocation={true}
-          followsUserLocation={true}
-          region={{
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}mapType="standard">
-            { showFriends ?
-            <FriendsMarkers/> : null}
+        {coordinates &&
+          <MapView
+            customMapStyle={mapStyle}
+            provider={PROVIDER_GOOGLE}
+            style={styles.mapStyle}
+            showsUserLocation={true}
+            followsUserLocation={true}
+            region={{
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+            mapType="standard"
+          >
+            {showFriends && <FriendsMarkers />}
+            {!isLoading && showRecs && (
+              <RecMarkers
+                restaurants={restaurants}
+                userLocation={coordinates}
+                onBizCardPressedOut={onBizCardPressedOut}
+              />
+            )}
           </MapView>
-
-          <View style={{position: 'absolute', top: '65%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
-              {/* <MapviewSwitch/> */}
-              {<RecSliders/>}
-          </View>
-
-          <View style={{position: 'absolute', top: '85%', width: '100%', paddingHorizontal: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={switchStyles.container}>
-              {/* <MapviewSwitch/> */}
-              <HStack >
-                <Pressable onPressOut={()=> {setShowFriends(!showFriends)}}>
-                  {({
-                  isPressed
-                }) => {
-                  return <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
-                  {
-                      showFriends ? 
-                      <Image source={require("../assets/icons/show_friends_on.png")} alt="show_friends_on" w={30} h={30}/>
-                      :
-                      <Image source={require("../assets/icons/show_friends_off.png")} alt="show_friends_off" w={30} h={30}/>
-                  }
-                  </Box>
+        }
+  
+        <View
+          style={{
+            position: "absolute",
+            top: "65%",
+            width: "100%",
+            paddingHorizontal: "10%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          {/* <MapviewSwitch/> */}
+          {!showRecs && <RecSliders />}
+        </View>
+  
+        <View
+          style={{
+            position: "absolute",
+            top: "85%",
+            width: "100%",
+            paddingHorizontal: "10%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={switchStyles.container}>
+            {/* <MapviewSwitch/> */}
+            <HStack>
+              <Pressable
+                onPressOut={() => {
+                  setShowFriends(!showFriends);
                 }}
-                </Pressable>
-                <Spacer/>
-                <Pressable onPressOut={()=> {setShowRecs(!showRecs)}} bg="#FFFFFF">
-                  {({
-                  isPressed
-                }) => {
-                  return <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
-                  {
-                      showRecs ? 
-                      <Image source={require("../assets/icons/show_recs_on.png")} alt="show_recs_on" w={30} h={30}/>
-                      :
-                      <Image source={require("../assets/icons/show_recs_off.png")} alt="show_recs_off" w={30} h={30}/>
-                  }
-                  </Box>
+              >
+                {({ isPressed }) => {
+                  return (
+                    <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                      {showFriends ? (
+                        <Image
+                          source={require("../assets/icons/show_friends_on.png")}
+                          alt="show_friends_on"
+                          w={30}
+                          h={30}
+                        />
+                      ) : (
+                        <Image
+                          source={require("../assets/icons/show_friends_off.png")}
+                          alt="show_friends_off"
+                          w={30}
+                          h={30}
+                        />
+                      )}
+                    </Box>
+                  );
                 }}
-                </Pressable>
-              </HStack>
-            </View>
+              </Pressable>
+              <Spacer />
+              <Pressable
+                onPressOut={() => {
+                  setShowRecs(!showRecs);
+                }}
+                bg="#FFFFFF"
+              >
+                {({ isPressed }) => {
+                  return (
+                    <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                      {showRecs ? (
+                        <Image
+                          source={require("../assets/icons/show_recs_on.png")}
+                          alt="show_recs_on"
+                          w={30}
+                          h={30}
+                        />
+                      ) : (
+                        <Image
+                          source={require("../assets/icons/show_recs_off.png")}
+                          alt="show_recs_off"
+                          w={30}
+                          h={30}
+                        />
+                      )}
+                    </Box>
+                  );
+                }}
+              </Pressable>
+            </HStack>
           </View>
-          
+        </View>
       </View>
     );
   }

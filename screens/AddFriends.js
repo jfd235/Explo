@@ -36,10 +36,12 @@ export function AddFriends({ navigation: { goBack } }) {
           currentFriends.map((key, idx) => {
             let tempRef = ref(db, `users/${key}`);
             onValue(tempRef, (snapshotFriend) => {
-                const friend = snapshotFriend.val();
-                // console.log(friend)
+              const friend = snapshotFriend.val();
+              // console.log(friend)
+              if(friend) {
                 console.log(friend['name'])
                 names.push(friend['name'])
+                }
             });
           });
           console.log(names)

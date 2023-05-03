@@ -19,7 +19,7 @@ function handleReadData(user) {
 }
 
 export function FriendsListView({ navigation }) {
-    const [friendsData, setFriendsData] = useState([]);
+    const [friendsData, setFriendsData] = useState(null);
     let user = getUserVariable();
     if (!user) {
         return (
@@ -53,9 +53,11 @@ export function FriendsListView({ navigation }) {
                     
                     onValue(tempRef, (snapshotFriend) => {
                         const friend = snapshotFriend.val();
-                        // console.log(friend)
-                        console.log([friend['name'], new Date(friend['lastAct'])])
-                        out.push([friend['name'], new Date(friend['lastAct'])])
+                        // if(friend) {
+                            // console.log(friend)
+                            console.log([friend['name'], new Date(friend['lastAct'])])
+                            out.push([friend['name'], new Date(friend['lastAct'])])
+                        // }
                     });
                 });
                 console.log(out);
