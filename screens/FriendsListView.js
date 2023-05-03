@@ -53,11 +53,11 @@ export function FriendsListView({ navigation }) {
                     
                     onValue(tempRef, (snapshotFriend) => {
                         const friend = snapshotFriend.val();
-                        // if(friend) {
+                        if(friend) {
                             // console.log(friend)
                             console.log([friend['name'], new Date(friend['lastAct'])])
                             out.push([friend['name'], new Date(friend['lastAct'])])
-                        // }
+                        }
                     });
                 });
                 console.log(out);
@@ -66,7 +66,7 @@ export function FriendsListView({ navigation }) {
             });
         }
         // const currTime = new Date();
-        if (friendsData.length == 0)
+        if (!friendsData)
         {
             return (
             <View style={styles.container}>
