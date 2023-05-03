@@ -1,34 +1,33 @@
 // In App.js in a new project
 
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from './screens/Home'
-import { ProfileScreen } from './screens/Profile'
-import { BizDetail } from './screens/BizDetail';
-import { CheckIn } from './screens/CheckIn';
-import { MapScreen } from './screens/Map'
-import { SignUpLogInComponent } from './screens/Login'
-import { NativeBaseProvider } from 'native-base';
-import { FriendsListView } from './screens/FriendsListView';
-import { AddFriends } from './screens/AddFriends';
-
+import React, { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { HomeScreen } from "./screens/Home";
+import { ProfileScreen } from "./screens/Profile";
+import { BizDetail } from "./screens/BizDetail";
+import { CheckIn } from "./screens/CheckIn";
+import { MapScreen } from "./screens/Map";
+import { SignUpLogInComponent } from "./screens/Login";
+import { NativeBaseProvider } from "native-base";
+import { FriendsListView } from "./screens/FriendsListView";
+import { AddFriends } from "./screens/AddFriends";
 
 const Stack = createNativeStackNavigator();
 
-
 function App() {
   return (
-    <NativeBaseProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home"
+    <NavigationContainer>
+      <NativeBaseProvider>
+        <Stack.Navigator
+          initialRouteName="Home"
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#B6E13D',
+              backgroundColor: "#B6E13D",
             },
-            headerTintColor: '#fff',
+            headerTintColor: "#fff",
             headerTitleStyle: {
-              fontWeight: 'bold',
+              fontWeight: "bold",
             },
           }}
         >
@@ -41,8 +40,8 @@ function App() {
           <Stack.Screen name="FriendsListView" component={FriendsListView} />
           <Stack.Screen name="AddFriends" component={AddFriends} />
         </Stack.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+      </NativeBaseProvider>
+    </NavigationContainer>
   );
 }
 

@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Dimensions, Button, Image, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Button,
+  Image,
+  Alert,
+} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { mapStyle } from "./mapStyle";
 import * as Location from "expo-location";
@@ -17,7 +24,7 @@ import ScrollBizCard from "../components/ScrollBizCard";
 import { calGeoDistance } from "../utils";
 import { RecMarkers } from "../components/RecMarkers";
 
-export function MapScreen() {
+export function MapScreen({ navigation }) {
   const [coordinates, setCoordinates] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,7 +34,6 @@ export function MapScreen() {
   // API:
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
-  
 
   const mapRef = useRef(null);
   const MAX_SPAN = 0.005 * 2;
@@ -116,11 +122,16 @@ export function MapScreen() {
     let DATA = [...restaurants];
 
     const renderItem = ({ item }) => (
-      <ScrollBizCard key={item.id} bizData={item} userLocation={coordinates} />
+      <ScrollBizCard
+        key={item.id}
+        bizData={item}
+        userLocation={coordinates}
+        onBizCardPressedOut={onBizCardPressedOut}
+      />
     );
 
     const ItemSeparator = () => <Box w="5" />;
-    
+
     return (
       <FlatList
         horizontal
@@ -164,36 +175,45 @@ export function MapScreen() {
         const promises = responseJson.results.map(async (restaurant) => {
           try {
             const response = await fetch(
-              `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=name,photo&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+              `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
             );
             const detailsJson = await response.json();
             const photo = detailsJson.result?.photos?.[0];
-            console.log("detail: " + detailsJson);
             return {
               ...restaurant,
               photoUrl: photo
                 ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
                 : undefined,
+              reviews: detailsJson.result.reviews,
+              formatted_phone_number: detailsJson.result.formatted_phone_number,
+              website: detailsJson.result.website,
+              price_level: detailsJson.result.price_level,
+              rating: detailsJson.result.rating,
             };
           } catch (error) {
             console.error(error);
             return restaurant;
           }
         });
-        Promise.all(promises).then(
-          (restaurantsWithPhotos) => {
-            const restaurantData = restaurantsWithPhotos.map((result) => ({
-              id: result.place_id,
-              name: result.name,
-              location: {
-                latitude: result.geometry.location.lat,
-                longitude: result.geometry.location.lng,
-              },
-              address: result.vicinity,
-              imgUrl: result.photoUrl
-            }));
-            setRestaurants(restaurantData);
-          });})
+        Promise.all(promises).then((restaurantsWithPhotos) => {
+          const restaurantData = restaurantsWithPhotos.map((result) => ({
+            id: result.place_id,
+            name: result.name,
+            location: {
+              latitude: result.geometry.location.lat,
+              longitude: result.geometry.location.lng,
+            },
+            address: result.vicinity,
+            imgUrl: result.photoUrl,
+            reviews: result.reviews,
+            phoneNumber: result.formatted_phone_number,
+            website: result.website,
+            priceLevel: result.price_level,
+            rating: result.rating,
+          }));
+          setRestaurants(restaurantData);
+        });
+      })
       .catch((error) => {
         console.error(error);
       })
@@ -201,7 +221,6 @@ export function MapScreen() {
         setIsLoading(false);
       });
   };
-
 
   useEffect(() => {
     findCoordinates();
@@ -212,10 +231,14 @@ export function MapScreen() {
   }, []);
 
   useEffect(() => {
-    if (coordinates.longitude == undefined || coordinates.latitude == undefined) return; 
+    if (coordinates.longitude == undefined || coordinates.latitude == undefined)
+      return;
     fetchData();
-  }, [coordinates])
-  
+  }, [coordinates]);
+
+  const onBizCardPressedOut = (bizData) => {
+    navigation.navigate("Detail", { bizData });
+  };
 
   return (
     <View style={styles.container}>
@@ -234,7 +257,13 @@ export function MapScreen() {
         mapType="standard"
       >
         {showFriends && <FriendsMarkers />}
-        {(!isLoading && showRecs) && <RecMarkers restaurants={restaurants} userLocation={coordinates}/>}
+        {!isLoading && showRecs && (
+          <RecMarkers
+            restaurants={restaurants}
+            userLocation={coordinates}
+            onBizCardPressedOut={onBizCardPressedOut}
+          />
+        )}
       </MapView>
 
       <View
