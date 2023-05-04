@@ -466,6 +466,7 @@ export function MapScreen({ navigation, route }) {
               <Pressable
                 isDisabled={badgeToShow}
                 onPressOut={() => {
+                  setShowRecs(false);
                   setShowFriends(!showFriends);
                 }}
               >
@@ -495,6 +496,7 @@ export function MapScreen({ navigation, route }) {
               <Pressable
                 isDisabled={badgeToShow}
                 onPressOut={() => {
+                  setShowFriends(false);
                   setShowRecs(!showRecs);
                 }}
                 bg="#FFFFFF"
