@@ -65,7 +65,7 @@ export function SignUpLogInComponent() {
                 />
             </View>
             <View style={[buttonStyles.container]}>
-                <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)"}} title="Sign me up!"
+                <Button color="#FFFFFF" style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)"}} title="Sign me up!"
                     onPress={() => {
                         console.log("signing up");
                         createUserWithEmailAndPassword(auth, email, password)
@@ -95,7 +95,7 @@ export function SignUpLogInComponent() {
                 </Button>
             </View>
             <View style={[buttonStyles.container]}>
-                <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}  title="Log in!"
+                <Button color="#FFFFFF" style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }}  title="Log in!"
                     onPress={() => {
                         console.log("Logging In!");
                         signInWithEmailAndPassword(auth, email, password)
@@ -133,7 +133,7 @@ export function SignUpLogInComponent() {
                 </Button>
             </View>
             <View style={[buttonStyles.container]}>
-                <Button style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }} title="Sign out!"
+                <Button color="#FFFFFF" style={{ alignSelf: "center", backgroundColor: "rgb(47, 47, 47)" }} title="Sign out!"
                     onPress={() => {
                         console.log("Signing Out!");
                         signOut(auth).then(() => {
