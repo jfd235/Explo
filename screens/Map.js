@@ -25,8 +25,9 @@ import { calGeoDistance } from "../utils";
 import { RecMarkers } from "../components/RecMarkers";
 import { getZipcodeBorders } from "../utils";
 import { ZipCodeOverlay } from "../components/ZipCodeOverlay";
+import { RewardsOverlay } from "../components/RewardsOverlay";
 
-export function MapScreen({ navigation }) {
+export function MapScreen({ navigation, route }) {
   const [coordinates, setCoordinates] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -34,12 +35,12 @@ export function MapScreen({ navigation }) {
   const [showRecs, setShowRecs] = useState(false);
 
   // API:
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
 
   // Map Overlay:
   const [showOverlay, setShowOverlay] = useState(true); // change to false after switch implemented
   const [zipCodeCoordinates, setZipCodeCoordinates] = useState([]);
+  const [badgeToShow, setBadgeToShow] = useState(1);
 
   const mapRef = useRef(null);
   const MAX_SPAN = 0.005 * 2;
@@ -242,10 +243,21 @@ export function MapScreen({ navigation }) {
     fetchData();
     const zipCodeCoordinates = getZipcodeBorders();
     setZipCodeCoordinates(zipCodeCoordinates._j); //TODO: figure out why this _j field
+    if (route.params != null && route.params.badgeToShow != null) {
+      setBadgeToShow(route.params.badgeToShow);
+    }
   }, [coordinates]);
 
   const onBizCardPressedOut = (bizData) => {
     navigation.navigate("Detail", { bizData });
+  };
+
+  const onBadgePressed = () => {
+    setBadgeToShow(null);
+  };
+
+  const onGotoCollectionsPressed = () => {
+    console.log("go to collections");
   };
 
   return (
@@ -272,8 +284,26 @@ export function MapScreen({ navigation }) {
             onBizCardPressedOut={onBizCardPressedOut}
           />
         )}
-        {showOverlay && <ZipCodeOverlay geometry={zipCodeCoordinates} />}
+        {showOverlay && !badgeToShow && (
+          <ZipCodeOverlay geometry={zipCodeCoordinates} />
+        )}
       </MapView>
+
+      <View
+        style={{
+          position: "absolute",
+          top: "20%",
+          width: "100%",
+        }}
+      >
+        {badgeToShow && (
+          <RewardsOverlay
+            badge={badgeToShow}
+            onBadgePressed={onBadgePressed}
+            onGotoCollectionsPressed={onGotoCollectionsPressed}
+          />
+        )}
+      </View>
 
       <View
         style={{
@@ -285,8 +315,7 @@ export function MapScreen({ navigation }) {
           justifyContent: "space-between",
         }}
       >
-        {/* <MapviewSwitch/> */}
-        {!showRecs && <RecSliders />}
+        {!showRecs && !badgeToShow && <RecSliders />}
       </View>
 
       <View

@@ -12,7 +12,6 @@ import { SignUpLogInComponent } from "./screens/Login";
 import { NativeBaseProvider } from "native-base";
 import { FriendsListView } from "./screens/FriendsListView";
 import { AddFriends } from "./screens/AddFriends";
-
 const Stack = createNativeStackNavigator();
 
 function App() {
