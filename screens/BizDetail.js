@@ -38,7 +38,6 @@ const onWebButtonPressed = (website) => {
 // TODO: remove background highlighting
 
 export function BizDetail({ navigation, route }) {
-  console.log("details props:", route.params);
   const bizData =
     route.params != undefined
       ? route.params.bizData

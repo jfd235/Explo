@@ -24,33 +24,18 @@ import { app, db } from "../firebaseConfig";
 import { getUserVariable } from "../UserContext";
 import { Box, HStack, VStack, Text, Pressable, Center } from "native-base";
 import { TabView, SceneMap } from "react-native-tab-view";
-import TabViewExample from "../components/ProfileTab";
+import ProfileTab from "../components/ProfileTab";
+import { useIsFocused } from "@react-navigation/native";
 
-export function ProfileScreen({ navigation: { goBack, navigate } }) {
+export function ProfileScreen({ navigation: { goBack, navigate }, route }) {
   const [name, setName] = useState("");
   const [profileImage, setProfileImage] = useState(null);
 
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    {
-      key: "first",
-      title: "Tab 1",
-    },
-    {
-      key: "second",
-      title: "Tab 2",
-    },
-    {
-      key: "third",
-      title: "Tab 3",
-    },
-    {
-      key: "fourth",
-      title: "Tab 4",
-    },
-  ]);
-
   let user = getUserVariable();
+  // user = true;
+
+  const isFocused = useIsFocused();
+  const initTabIndex = route.params != null ? route.params.tabIndex : 0;
 
   if (!user) {
     return (
@@ -166,7 +151,7 @@ export function ProfileScreen({ navigation: { goBack, navigate } }) {
             />
             <Button title="Update name" onPress={updateData} />
           </View>
-          <TabViewExample />
+          <ProfileTab tabIndex={initTabIndex} />
           <View style={styles.buttonContainer}>
             <Button
               color="#FFFFFF"

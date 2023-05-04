@@ -15,10 +15,14 @@ import {
   AspectRatio,
 } from "native-base";
 
-export default function TabViewExample() {
+export default function ProfileTab(props) {
   const layout = useWindowDimensions();
 
-  const [index, setIndex] = React.useState(0);
+  const { tabIndex } = props;
+
+  const [index, setIndex] = React.useState(tabIndex);
+  console.log("tab index", tabIndex);
+  console.log("tab index state", index);
   const [routes] = React.useState([
     { key: "first", title: "Progress" },
     { key: "second", title: "Badges" },
@@ -32,6 +36,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/bronze_medal.png")}
+          alt="test badge"
         />
       ),
     },
@@ -40,6 +45,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/silver_medal.png")}
+          alt="test badge"
         />
       ),
     },
@@ -48,6 +54,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/tropy_star.png")}
+          alt="test badge"
         />
       ),
     },
@@ -56,6 +63,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/trophy_cup.png")}
+          alt="test badge"
         />
       ),
     },
@@ -64,6 +72,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_1.png")}
+          alt="test badge"
         />
       ),
     },
@@ -72,6 +81,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_4.png")}
+          alt="test badge"
         />
       ),
     },
@@ -80,6 +90,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_5.png")}
+          alt="test badge"
         />
       ),
     },
@@ -88,6 +99,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_6.png")}
+          alt="test badge"
         />
       ),
     },
@@ -96,6 +108,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_2.png")}
+          alt="test badge"
         />
       ),
     },
@@ -104,6 +117,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Award_3.png")}
+          alt="test badge"
         />
       ),
     },
@@ -112,6 +126,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Medal_Blue_2.png")}
+          alt="test badge"
         />
       ),
     },
@@ -120,6 +135,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Medal_Blue.png")}
+          alt="test badge"
         />
       ),
     },
@@ -128,6 +144,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Medal_Purple.png")}
+          alt="test badge"
         />
       ),
     },
@@ -136,6 +153,7 @@ export default function TabViewExample() {
         <Image
           style={{ flex: 1, resizeMode: "contain" }}
           source={require("../assets/icons/Medal_Red.png")}
+          alt="test badge"
         />
       ),
     },
@@ -154,7 +172,7 @@ export default function TabViewExample() {
       <FlatList
         data={badgeData}
         numColumns={3}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(_, index) => index.toString()}
         renderItem={renderItem}
         ItemSeparator={ItemSeparator}
         // contentContainerStyle={styles.contentContainer}
@@ -215,7 +233,7 @@ export default function TabViewExample() {
   });
 
   const renderTabBar = (props) => {
-    const inputRange = props.navigationState.routes.map((x, i) => i);
+    const inputRange = props.navigationState.routes.map((_, i) => i);
     return (
       <Box flexDirection="row" w={300}>
         {props.navigationState.routes.map((route, i) => {

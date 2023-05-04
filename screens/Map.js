@@ -26,21 +26,24 @@ import { RecMarkers } from "../components/RecMarkers";
 import { getZipcodeBorders } from "../utils";
 import { ZipCodeOverlay } from "../components/ZipCodeOverlay";
 import { RewardsOverlay } from "../components/RewardsOverlay";
+import { useIsFocused } from "@react-navigation/native";
 
 export function MapScreen({ navigation, route }) {
+  const isFocused = useIsFocused();
+
   const [coordinates, setCoordinates] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   const [showFriends, setShowFriends] = useState(false);
   const [showRecs, setShowRecs] = useState(false);
+  const [showHighlight, setShowHighlight] = useState(false);
 
   // API:
   const [restaurants, setRestaurants] = useState([]);
 
   // Map Overlay:
-  const [showOverlay, setShowOverlay] = useState(true); // change to false after switch implemented
   const [zipCodeCoordinates, setZipCodeCoordinates] = useState([]);
-  const [badgeToShow, setBadgeToShow] = useState(1);
+  const [badgeToShow, setBadgeToShow] = useState(null);
 
   const mapRef = useRef(null);
   const MAX_SPAN = 0.005 * 2;
@@ -243,10 +246,13 @@ export function MapScreen({ navigation, route }) {
     fetchData();
     const zipCodeCoordinates = getZipcodeBorders();
     setZipCodeCoordinates(zipCodeCoordinates._j); //TODO: figure out why this _j field
+  }, [coordinates]);
+
+  useEffect(() => {
     if (route.params != null && route.params.badgeToShow != null) {
       setBadgeToShow(route.params.badgeToShow);
     }
-  }, [coordinates]);
+  }, [isFocused]);
 
   const onBizCardPressedOut = (bizData) => {
     navigation.navigate("Detail", { bizData });
@@ -254,10 +260,12 @@ export function MapScreen({ navigation, route }) {
 
   const onBadgePressed = () => {
     setBadgeToShow(null);
+    route.params = null;
   };
 
   const onGotoCollectionsPressed = () => {
     console.log("go to collections");
+    navigation.navigate("Profile", { tabIndex: 1 });
   };
 
   return (
@@ -284,7 +292,7 @@ export function MapScreen({ navigation, route }) {
             onBizCardPressedOut={onBizCardPressedOut}
           />
         )}
-        {showOverlay && !badgeToShow && (
+        {showHighlight && !badgeToShow && (
           <ZipCodeOverlay geometry={zipCodeCoordinates} />
         )}
       </MapView>
@@ -329,9 +337,9 @@ export function MapScreen({ navigation, route }) {
         }}
       >
         <View style={switchStyles.container}>
-          {/* <MapviewSwitch/> */}
           <HStack>
             <Pressable
+              isDisabled={badgeToShow}
               onPressOut={() => {
                 setShowFriends(!showFriends);
               }}
@@ -360,6 +368,7 @@ export function MapScreen({ navigation, route }) {
             </Pressable>
             <Spacer />
             <Pressable
+              isDisabled={badgeToShow}
               onPressOut={() => {
                 setShowRecs(!showRecs);
               }}
@@ -379,6 +388,35 @@ export function MapScreen({ navigation, route }) {
                       <Image
                         source={require("../assets/icons/show_recs_off.png")}
                         alt="show_recs_off"
+                        w={30}
+                        h={30}
+                      />
+                    )}
+                  </Box>
+                );
+              }}
+            </Pressable>
+            <Spacer />
+            <Pressable
+              isDisabled={badgeToShow}
+              onPressOut={() => {
+                setShowHighlight(!showHighlight);
+              }}
+            >
+              {({ isPressed }) => {
+                return (
+                  <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                    {showHighlight ? (
+                      <Image
+                        source={require("../assets/icons/highlight_on.png")}
+                        alt="highlight_on"
+                        w={30}
+                        h={30}
+                      />
+                    ) : (
+                      <Image
+                        source={require("../assets/icons/highlight_off.png")}
+                        alt="highlight_off"
                         w={30}
                         h={30}
                       />
@@ -423,7 +461,7 @@ const buttonStyles = StyleSheet.create({
 
 const switchStyles = StyleSheet.create({
   container: {
-    width: 100,
+    width: 130,
     height: 50,
     paddingLeft: 10,
     paddingRight: 10,

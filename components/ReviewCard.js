@@ -17,7 +17,6 @@ import StarRating from "react-native-star-rating-widget";
 
 export default function ReviewCard(data) {
   const { author_name, rating, text } = data.data;
-  console.log("review data:", data.data);
   return (
     <VStack alignItems="flex-start" maxH="100%">
       <Text fontSize="sm">{author_name}</Text>

@@ -28,7 +28,6 @@ function generateColor(number) {
 export function ZipCodeOverlay(props) {
   const { geometry } = props;
   console.log("rendering overlay");
-  console.log(geometry.length);
   if (geometry == null) return null;
   return geometry.map((entry, index) => {
     return (

@@ -48,6 +48,5 @@ export async function getZipcodeBorders() {
       longitude: Number(e[0]),
     })),
   }));
-  console.log("zip code:", zipCodeCoordinates[0]);
   return zipCodeCoordinates;
 }

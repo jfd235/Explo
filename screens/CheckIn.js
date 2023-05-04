@@ -16,7 +16,7 @@ import {
 
 const onSubmitButtonPressed = (navigation) => {
   alert("You've checked in!");
-  navigation.popToTop();
+  navigation.navigate("Map", { badgeToShow: 1 });
 };
 
 export function CheckIn({ navigation, route }) {
