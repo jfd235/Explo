@@ -19,7 +19,7 @@ import { getUserVariable } from '../UserContext';
 
 const onSubmitButtonPressed = (navigation, user, bizData) => {
   const currTime = new Date();
-  const convert = new Date(currTime.getTime() - (34 * 60 * 60 * 1000)).toString();
+  const convert = new Date(currTime.getTime()).toString();
   console.log(convert)
   set(ref(db, `users/${user.uid}/locations/${bizData.id}/lastAct`),
         convert
@@ -28,7 +28,7 @@ const onSubmitButtonPressed = (navigation, user, bizData) => {
       console.log("data updated!", bizData.id)
       // alert('data updated!');
       alert("You've checked in!");
-      navigation.goBack();
+      navigation.popToTop();
     })  
     .catch((error) => {
       // The write failed...

@@ -143,6 +143,13 @@ export function ProfileScreen({ navigation: { goBack, navigate } }) {
             onPress={() => navigate('AddFriends')}
           />
         </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            color="#FFFFFF"
+            title="My Places"
+            onPress={() => navigate('Places')}
+          />
+        </View>
         </VStack>
       </View>
     );

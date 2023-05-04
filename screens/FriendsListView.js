@@ -56,7 +56,9 @@ export function FriendsListView({ navigation }) {
                         if(friend) {
                             // console.log(friend)
                             console.log([friend['name'], new Date(friend['lastAct'])])
-                            out.push([friend['name'], new Date(friend['lastAct'])])
+                            out.push({
+                              id: friend['name'],
+                              lastAct: new Date(friend['lastAct'])})
                         }
                     });
                 });
@@ -85,9 +87,9 @@ export function FriendsListView({ navigation }) {
         // console.log(friendsData.length)
 
         const activityList = friendsData.map((dataEntry) =>
-            <HStack key={dataEntry[0]} justifyContent="space-between" alignItems="center" rounded="xl" w="100%" h={60} bg="#333333" p={2}>
-                <Text fontSize="md" color="#FFFFFF"> {dataEntry[0]} </Text>
-                <Text italic fontSize="md" color="#FFFFFF">{getTimeDiff(dataEntry[1])}</Text>
+            <HStack key={dataEntry.id} justifyContent="space-between" alignItems="center" rounded="xl" w="100%" h={60} bg="#333333" p={2}>
+                <Text fontSize="md" color="#FFFFFF"> {dataEntry.id} </Text>
+                <Text italic fontSize="md" color="#FFFFFF">{getTimeDiff(dataEntry.lastAct)}</Text>
                 <Button bg="#B6E13D" rounded="2xl">
                     <Text fontSize="md" color="#FFFFFF">
                         Details
