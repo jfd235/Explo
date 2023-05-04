@@ -23,6 +23,8 @@ import {
 import ScrollBizCard from "../components/ScrollBizCard";
 import { calGeoDistance } from "../utils";
 import { RecMarkers } from "../components/RecMarkers";
+import { getZipcodeBorders } from "../utils";
+import { ZipCodeOverlay } from "../components/ZipCodeOverlay";
 
 export function MapScreen({ navigation }) {
   const [coordinates, setCoordinates] = useState({});
@@ -34,6 +36,10 @@ export function MapScreen({ navigation }) {
   // API:
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+
+  // Map Overlay:
+  const [showOverlay, setShowOverlay] = useState(true); // change to false after switch implemented
+  const [zipCodeCoordinates, setZipCodeCoordinates] = useState([]);
 
   const mapRef = useRef(null);
   const MAX_SPAN = 0.005 * 2;
@@ -234,6 +240,8 @@ export function MapScreen({ navigation }) {
     if (coordinates.longitude == undefined || coordinates.latitude == undefined)
       return;
     fetchData();
+    const zipCodeCoordinates = getZipcodeBorders();
+    setZipCodeCoordinates(zipCodeCoordinates._j); //TODO: figure out why this _j field
   }, [coordinates]);
 
   const onBizCardPressedOut = (bizData) => {
@@ -264,6 +272,7 @@ export function MapScreen({ navigation }) {
             onBizCardPressedOut={onBizCardPressedOut}
           />
         )}
+        {showOverlay && <ZipCodeOverlay geometry={zipCodeCoordinates} />}
       </MapView>
 
       <View
