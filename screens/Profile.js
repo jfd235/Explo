@@ -158,7 +158,7 @@ export function ProfileScreen({ navigation: { goBack, navigate }, route }) {
               onPress={() => navigate("AddFriends")}
             />
           </View>
-          <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainer} marginBottom={30}>
             <Button
               color="#FFFFFF"
               title="My Places"
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   },
   profileImageContainer: {
     alignItems: "center",
+    marginTop: 20,
     marginBottom: 20,
   },
   profileImage: {
@@ -192,8 +193,8 @@ const styles = StyleSheet.create({
   nameInput: {
     borderBottomWidth: 1,
     borderColor: "gray",
-    padding: 10,
-    marginVertical: 20,
+    padding: 0,
+    marginVertical: 0,
     width: "80%",
     textAlign: "center",
   },
