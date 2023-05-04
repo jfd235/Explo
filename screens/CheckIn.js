@@ -14,34 +14,35 @@ import {
   Input,
 } from "native-base";
 import { db } from "../firebaseConfig";
-import { ref, push, set, onValue } from 'firebase/database'
-import { getUserVariable } from '../UserContext';
+import { ref, push, set, onValue } from "firebase/database";
+import { getUserVariable } from "../UserContext";
 
 const onSubmitButtonPressed = (navigation, user, bizData) => {
   const currTime = new Date();
   const convert = new Date(currTime.getTime()).toString();
-  console.log(convert)
-  set(ref(db, `users/${user.uid}/locations/${bizData.id}/lastAct`),
-        convert
-    ).then(() => {
+  console.log(convert);
+  set(ref(db, `users/${user.uid}/locations/${bizData.id}/lastAct`), convert)
+    .then(() => {
       // Data saved successfully!
-      console.log("data updated!", bizData.id)
+      console.log("data updated!", bizData.id);
       // alert('data updated!');
       alert("You've checked in!");
-      navigation.popToTop();
-    })  
+      navigation.navigate("Map", { badgeToShow: 1 });
+    })
     .catch((error) => {
       // The write failed...
       alert(error);
-  });
+    });
 };
 
 export function CheckIn({ navigation, route }) {
   let user = getUserVariable();
   if (!user) {
     return (
-      <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-        <Text>Can't view since you haven't signed in or created an account</Text>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>
+          Can't view since you haven't signed in or created an account
+        </Text>
       </View>
     );
   }
@@ -118,7 +119,7 @@ export function CheckIn({ navigation, route }) {
           height={50}
           rounded="xl"
           onPress={() => {
-            onSubmitButtonPressed(navigation, user,route.params.bizData);
+            onSubmitButtonPressed(navigation, user, route.params.bizData);
           }}
           bg={"#B6E13D"}
         >

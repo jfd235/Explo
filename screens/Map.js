@@ -7,10 +7,10 @@ import {
   Image,
   Alert,
 } from "react-native";
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { mapStyle } from './mapStyle';
-import * as Location from 'expo-location';
-import { getTimeDiff } from '../utils';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { mapStyle } from "./mapStyle";
+import * as Location from "expo-location";
+import { getTimeDiff } from "../utils";
 import {
   HStack,
   Box,
@@ -20,44 +20,52 @@ import {
   FlatList,
   Text,
 } from "native-base";
-import ScrollBizCard from '../components/ScrollBizCard';
-import { calGeoDistance } from '../utils';
-import { db } from "../firebaseConfig";
-import { ref, push, set, onValue } from 'firebase/database'
-import { getUserVariable } from '../UserContext';
+import ScrollBizCard from "../components/ScrollBizCard";
+import { calGeoDistance } from "../utils";
 import { RecMarkers } from "../components/RecMarkers";
+import { getZipcodeBorders } from "../utils";
+import { ZipCodeOverlay } from "../components/ZipCodeOverlay";
+import { RewardsOverlay } from "../components/RewardsOverlay";
+import { useIsFocused } from "@react-navigation/native";
+import { db } from "../firebaseConfig";
+import { ref, push, set, onValue } from "firebase/database";
+import { getUserVariable } from "../UserContext";
 
-export function MapScreen({ navigation }) {
+export function MapScreen({ navigation, route }) {
+  const isFocused = useIsFocused();
   const [coordinates, setCoordinates] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const [showFriends, setShowFriends] = useState(false);
   const [showRecs, setShowRecs] = useState(false);
-  const [markers, setMarkers] = useState({});
+  const [showHighlight, setShowHighlight] = useState(false);
 
   // API:
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
 
-  const mapRef = useRef(null);
+  // Map Overlay:
+  const [zipCodeCoordinates, setZipCodeCoordinates] = useState([]);
+  const [badgeToShow, setBadgeToShow] = useState(null);
+  const [markers, setMarkers] = useState({});
 
+  const mapRef = useRef(null);
   const MAX_SPAN = 0.005 * 2;
   let user = getUserVariable();
-  
+
   if (!user) {
     return (
-      <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-        <Text>Can't view since you haven't signed in or created an account</Text>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>
+          Can't view since you haven't signed in or created an account
+        </Text>
       </View>
     );
-  }
-
-  else {
-  
+  } else {
     const FriendsMarkers = () => {
       if (coordinates == null) return null;
-      
-      if (markers.length != 0) {
+
+      if (markers.length) {
+        console.log(markers.length);
         return markers.map((friendMarker, index) => (
           // console.log(friendMarker)
           <Marker
@@ -69,40 +77,46 @@ export function MapScreen({ navigation }) {
             }}
             onPress={(e) => {
               console.log("pressed: ", friendMarker.lastAct);
-          }}
+            }}
             // title={friendMarker.userName + ': ' + friendMarker.name}
             // description={getTimeDiff(new Date(friendMarker.lastAct))}
           >
-              <Callout
-                onPress={() => {
-                  onBizCardPressedOut(friendMarker)
-                  console.log("pressed")
-                }}>
-                  <Text
-                    isTruncated
-                    italic
-                    fontSize="md"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    paddingLeft={2}
-                  >
-                    {`${friendMarker.userName} was here ${getTimeDiff(new Date(friendMarker.lastAct))}`}
-                  </Text>
-                  <ScrollBizCard bizData={friendMarker} userLocation={coordinates}/>
-              </Callout>
+            <Callout
+              onPress={() => {
+                onBizCardPressedOut(friendMarker);
+                console.log("pressed");
+              }}
+            >
+              <Text
+                isTruncated
+                italic
+                fontSize="md"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                paddingLeft={2}
+              >
+                {`${friendMarker.userName} was here ${getTimeDiff(
+                  new Date(friendMarker.lastAct)
+                )}`}
+              </Text>
+              <ScrollBizCard
+                bizData={friendMarker}
+                userLocation={coordinates}
+              />
+            </Callout>
           </Marker>
         ));
       }
-    }
+    };
 
     function getDistanceFromMe(longitude, latitude) {
       let dis = calGeoDistance(
-        {latitude: coordinates.latitude, longitude: coordinates.longitude},
-        {latitude: latitude, longitude: longitude},
+        { latitude: coordinates.latitude, longitude: coordinates.longitude },
+        { latitude: latitude, longitude: longitude }
       );
       return dis;
     }
-    const RecSliders = ({data}) => {
+    const RecSliders = ({ data }) => {
       if (coordinates == null) return null;
 
       const renderItem = ({ item }) => (
@@ -117,26 +131,27 @@ export function MapScreen({ navigation }) {
       // markers.forEach((item) => {
       //   item.push(getDistanceFromMe(item[2], item[3]));
       // });
-    
-      const ItemSeparator = () => (
-        <Box w="5"/>
+
+      const ItemSeparator = () => <Box w="5" />;
+
+      return (
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ItemSeparatorComponent={ItemSeparator}
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
       );
+    };
 
-      return <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={ItemSeparator}
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-              />;
-    }
-
-    
     const forceData = () => {
       const currTime = new Date();
-      const convert = new Date(currTime.getTime() - (34 * 60 * 60 * 1000)).toString();
-      console.log(convert)
+      const convert = new Date(
+        currTime.getTime() - 34 * 60 * 60 * 1000
+      ).toString();
+      console.log(convert);
       // console.log(currTime.getTime())
       // console.log(Date(currTime.getTime() - (0 * 60 * 60 * 1000)))
       // const data = {
@@ -145,74 +160,63 @@ export function MapScreen({ navigation }) {
       //   longitude: -73.95280781507101,
       //   image_uri: "https://lh5.googleusercontent.com/p/AF1QipNjTCMLfSUmeSIRasBhJJz0ULGlg26OkeT0Wi_a=w408-h541-k-no"
       // };
-      push(ref(db, 'users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUSdca7SAuAeHAZTXAp'),
+      push(
+        ref(
+          db,
+          "users/lZ7fuY2UchaLynfXdXbOCGZl0wj1/locations/-NUSdca7SAuAeHAZTXAp"
+        ),
         convert
-      ).then(() => {
-        // Data saved successfully!
-        console.log("data updated!")
-        alert('data updated!');
-      })  
-      .catch((error) => {
-        // The write failed...
-        alert(error);
-      });
-    }
-    
-    
+      )
+        .then(() => {
+          // Data saved successfully!
+          console.log("data updated!");
+          alert("data updated!");
+        })
+        .catch((error) => {
+          // The write failed...
+          alert(error);
+        });
+    };
+
     const findCoordinates = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         this.setState({
-          locationResult: 'Permission to access location was denied',
+          locationResult: "Permission to access location was denied",
         });
-        console.log('Permission to access location was denied');
+        console.log("Permission to access location was denied");
         return;
       } else {
-        let location = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Lowest}); // Accuracy.Balanced
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Lowest,
+        }); // Accuracy.Balanced
         const { latitude, longitude } = location.coords;
         setCoordinates({ latitude, longitude });
         // console.log(latitude)
         // console.log(longitude)
         // console.log("findCoordinates");
       }
-    }
-    const readData = async (uid) => {
-      if (!uid) {
-        return null;
-      }
-      console.log("Reading data...")
-      console.log(uid)
-      const starCountRef = ref(db, `users/${uid}`);
-      let name = null;
-      onValue(starCountRef, (snapshot) => {
-        const data = snapshot.val();
-        // delete data['canAddFriends']
-        console.log("user name", data.name)
-        name = data.name;
-      });
-      return name;
-    }
-
+    };
     const findFriends = async () => {
-      console.log("Reading data...")
+      console.log("Reading data...");
       const starCountRef = ref(db, `users/${user.uid}/friends`);
       let out = [];
       onValue(starCountRef, (snapshot) => {
-          const data = snapshot.val();
-          // delete data['canAddFriends']
-          if (data) {
-          currentFriends = Object.keys(data)
+        const data = snapshot.val();
+        // delete data['canAddFriends']
+        if (data) {
+          currentFriends = Object.keys(data);
           // console.log(data)
 
-          console.log("Retrieve friends...")
+          console.log("Retrieve friends...");
           currentFriends.map((key, idx) => {
             // console.log(data[key])
-            let tempRef = ref(db, `users/${key}/locations`);            
+            let tempRef = ref(db, `users/${key}/locations`);
             onValue(tempRef, (snapshotFriend) => {
               const locations = snapshotFriend.val();
               if (locations) {
                 // console.log("locations", locations)
-                const locationKeys = Object.keys(locations)
+                const locationKeys = Object.keys(locations);
                 // console.log([friend['name'], new Date(friend['lastAct'])])
                 // out.push([friend['name'], new Date(friend['lastAct'])])
                 locationKeys.map((locationKey, idx2) => {
@@ -221,79 +225,59 @@ export function MapScreen({ navigation }) {
                   // onValue(locationRef, (snapshotLocation) => {
                   //   const locationData = snapshotLocation.val();
                   //   // console.log("locationData", locationData)
-                  let nameRef = ref(db, `users/${key}`); 
+                  let nameRef = ref(db, `users/${key}`);
                   onValue(nameRef, (snapshotName) => {
-                    const userName = snapshotName.val()['name'];
-                    console.log("found name", userName)
+                    const userName = snapshotName.val()["name"];
+                    console.log("found name", userName);
                     fetch(
                       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${locationKey}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
-                    ).then((response) => response.json())
-                    .then((responseJson) => {
-                      const photo = responseJson.result?.photos?.[0];
-                      const result = {
-                        ...responseJson.result,
-                        photoUrl: photo
-                          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
-                          : undefined,
-                        reviews: responseJson.result.reviews,
-                        formatted_phone_number: responseJson.result.formatted_phone_number,
-                        website: responseJson.result.website,
-                        price_level: responseJson.result.price_level,
-                        rating: responseJson.result.rating,
-                      };
-                      // console.log("result", result)
-                      const restaurantData = {
-                        id: result.place_id,
-                        name: result.name,
-                        location: {
-                          latitude: result.geometry.location.lat,
-                          longitude: result.geometry.location.lng,
-                        },
-                        address: result.vicinity,
-                        imgUrl: result.photoUrl,
-                        reviews: result.reviews,
-                        phoneNumber: result.formatted_phone_number,
-                        website: result.website,
-                        priceLevel: result.price_level,
-                        rating: result.rating,
-                        userName: userName,
-                        lastAct: locations[locationKey].lastAct,
-                      };
-                      console.log("result location", restaurantData.location)
-                      out.push(restaurantData);
-                    }).then(() => {
-                      console.log("setting markers", out);
-                      setMarkers(out);
-                    });
+                    )
+                      .then((response) => response.json())
+                      .then((responseJson) => {
+                        const photo = responseJson.result?.photos?.[0];
+                        const result = {
+                          ...responseJson.result,
+                          photoUrl: photo
+                            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                            : undefined,
+                          reviews: responseJson.result.reviews,
+                          formatted_phone_number:
+                            responseJson.result.formatted_phone_number,
+                          website: responseJson.result.website,
+                          price_level: responseJson.result.price_level,
+                          rating: responseJson.result.rating,
+                        };
+                        // console.log("result", result)
+                        const restaurantData = {
+                          id: result.place_id,
+                          name: result.name,
+                          location: {
+                            latitude: result.geometry.location.lat,
+                            longitude: result.geometry.location.lng,
+                          },
+                          address: result.vicinity,
+                          imgUrl: result.photoUrl,
+                          reviews: result.reviews,
+                          phoneNumber: result.formatted_phone_number,
+                          website: result.website,
+                          priceLevel: result.price_level,
+                          rating: result.rating,
+                          userName: userName,
+                          lastAct: locations[locationKey].lastAct,
+                        };
+                        console.log("result location", restaurantData.location);
+                        out.push(restaurantData);
+                      })
+                      .then(() => {
+                        console.log("setting markers", out);
+                        setMarkers(out);
+                      });
                   });
                 });
               }
             });
           });
         }
-      });
-    }
-    
-    const getPlaceData = async (place_id) => {
-      fetch(
-        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
-      ).then((response) => {
-        const restaurantData = {
-          id: result.place_id,
-          name: result.name,
-          location: {
-            latitude: result.geometry.location.lat,
-            longitude: result.geometry.location.lng,
-          },
-          address: result.vicinity,
-          imgUrl: result.photoUrl,
-          reviews: result.reviews,
-          phoneNumber: result.formatted_phone_number,
-          website: result.website,
-          priceLevel: result.price_level,
-          rating: result.rating,
-        };
-        return restaurantData;
       });
     };
 
@@ -318,7 +302,8 @@ export function MapScreen({ navigation }) {
                   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
                   : undefined,
                 reviews: detailsJson.result.reviews,
-                formatted_phone_number: detailsJson.result.formatted_phone_number,
+                formatted_phone_number:
+                  detailsJson.result.formatted_phone_number,
                 website: detailsJson.result.website,
                 price_level: detailsJson.result.price_level,
                 rating: detailsJson.result.rating,
@@ -357,7 +342,7 @@ export function MapScreen({ navigation }) {
 
     useEffect(() => {
       findCoordinates().then(() => {
-        if(coordinates) {
+        if (coordinates) {
           console.log("Current location");
           console.log(coordinates.latitude);
           console.log(coordinates.longitude);
@@ -369,23 +354,45 @@ export function MapScreen({ navigation }) {
         // console.log("Forced data added")
       });
       findFriends().then(() => {
-        console.log("Friends found")
+        console.log("Friends found");
       });
     }, []);
 
     useEffect(() => {
-      if (coordinates == null || coordinates.longitude == undefined || coordinates.latitude == undefined)
+      if (
+        coordinates == null ||
+        coordinates.longitude == undefined ||
+        coordinates.latitude == undefined
+      )
         return;
       fetchData();
+      const zipCodeCoordinates = getZipcodeBorders();
+      setZipCodeCoordinates(zipCodeCoordinates._j); //TODO: figure out why this _j field
     }, [coordinates]);
-  
+
+    useEffect(() => {
+      if (route.params != null && route.params.badgeToShow != null) {
+        setBadgeToShow(route.params.badgeToShow);
+      }
+    }, [isFocused]);
+
     const onBizCardPressedOut = (bizData) => {
       navigation.navigate("Detail", { bizData });
     };
 
+    const onBadgePressed = () => {
+      setBadgeToShow(null);
+      route.params = null;
+    };
+
+    const onGotoCollectionsPressed = () => {
+      console.log("go to collections");
+      navigation.navigate("Profile", { tabIndex: 1 });
+    };
+
     return (
       <View style={styles.container}>
-        {coordinates &&
+        {coordinates && (
           <MapView
             customMapStyle={mapStyle}
             provider={PROVIDER_GOOGLE}
@@ -408,9 +415,28 @@ export function MapScreen({ navigation }) {
                 onBizCardPressedOut={onBizCardPressedOut}
               />
             )}
+            {showHighlight && !badgeToShow && (
+              <ZipCodeOverlay geometry={zipCodeCoordinates} />
+            )}
           </MapView>
-        }
-  
+        )}
+
+        <View
+          style={{
+            position: "absolute",
+            top: "20%",
+            width: "100%",
+          }}
+        >
+          {badgeToShow && (
+            <RewardsOverlay
+              badge={badgeToShow}
+              onBadgePressed={onBadgePressed}
+              onGotoCollectionsPressed={onGotoCollectionsPressed}
+            />
+          )}
+        </View>
+
         <View
           style={{
             position: "absolute",
@@ -421,11 +447,10 @@ export function MapScreen({ navigation }) {
             justifyContent: "space-between",
           }}
         >
-          {/* <MapviewSwitch/> */}
-          {showRecs && <RecSliders data={restaurants} />}
-          {showFriends && <RecSliders data={markers} />}
+          {showRecs && !badgeToShow && <RecSliders data={restaurants} />}
+          {showFriends && !badgeToShow && <RecSliders data={markers} />}
         </View>
-  
+
         <View
           style={{
             position: "absolute",
@@ -437,11 +462,10 @@ export function MapScreen({ navigation }) {
           }}
         >
           <View style={switchStyles.container}>
-            {/* <MapviewSwitch/> */}
             <HStack>
               <Pressable
+                isDisabled={badgeToShow}
                 onPressOut={() => {
-                  setShowRecs(false);
                   setShowFriends(!showFriends);
                 }}
               >
@@ -469,15 +493,18 @@ export function MapScreen({ navigation }) {
               </Pressable>
               <Spacer />
               <Pressable
+                isDisabled={badgeToShow}
                 onPressOut={() => {
-                  setShowFriends(false);
                   setShowRecs(!showRecs);
                 }}
                 bg="#FFFFFF"
               >
                 {({ isPressed }) => {
                   return (
-                    <Box rounded="xl" bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                    <Box
+                      rounded="xl"
+                      bg={isPressed ? "coolGray.200" : "#FFFFFF"}
+                    >
                       {showRecs ? (
                         <Image
                           source={require("../assets/icons/show_recs_on.png")}
@@ -497,6 +524,35 @@ export function MapScreen({ navigation }) {
                   );
                 }}
               </Pressable>
+              <Spacer />
+              <Pressable
+                isDisabled={badgeToShow}
+                onPressOut={() => {
+                  setShowHighlight(!showHighlight);
+                }}
+              >
+                {({ isPressed }) => {
+                  return (
+                    <Box bg={isPressed ? "coolGray.200" : "#FFFFFF"}>
+                      {showHighlight ? (
+                        <Image
+                          source={require("../assets/icons/highlight_on.png")}
+                          alt="highlight_on"
+                          w={30}
+                          h={30}
+                        />
+                      ) : (
+                        <Image
+                          source={require("../assets/icons/highlight_off.png")}
+                          alt="highlight_off"
+                          w={30}
+                          h={30}
+                        />
+                      )}
+                    </Box>
+                  );
+                }}
+              </Pressable>
             </HStack>
           </View>
         </View>
@@ -508,13 +564,13 @@ export function MapScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
   mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
 });
 
@@ -523,26 +579,26 @@ const buttonStyles = StyleSheet.create({
     width: 80,
     height: 50,
     paddingLeft: 10,
-    backgroundColor: '#B6E13D',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#B6E13D",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
 const switchStyles = StyleSheet.create({
   container: {
-    width: 100,
+    width: 130,
     height: 50,
     paddingLeft: 10,
-    paddingRight: 10, 
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingRight: 10,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
 });

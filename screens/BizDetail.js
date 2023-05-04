@@ -20,10 +20,14 @@ import { Linking } from "react-native";
 function onCheckinButtonPressed(navigation, bizData) {
   console.log("checked in");
   navigation.navigate("CheckIn", { bizData });
+  navigation.navigate("CheckIn", { bizData });
 }
 
 const onCallButtonPressed = (phoneNumber) => {
-  console.log("call the biz");
+  const onCallButtonPressed = (phoneNumber) => {
+    console.log("call the biz");
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
   Linking.openURL(`tel:${phoneNumber}`);
 };
 
@@ -192,7 +196,9 @@ export function BizDetail({ navigation, route }) {
         <VStack bg={theme.colors.tertiary[400]} p={5} width="100%" height="40%">
           <ScrollView showsVerticalScrollIndicator={false}>
             {reviews &&
-              reviews.map((reviewData) => <ReviewCard data={reviewData} key={reviewData.time} />)}
+              reviews.map((reviewData) => (
+                <ReviewCard data={reviewData} key={reviewData.time} />
+              ))}
           </ScrollView>
         </VStack>
       </VStack>

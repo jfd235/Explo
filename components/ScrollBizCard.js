@@ -17,7 +17,6 @@ import {
 import { calGeoDistance } from "../utils";
 
 export default function ScrollBizCard(props) {
-  // console.log("props", props.bizData)
   if (props.userLocation == null) return null;
 
   const { name, location, imgUrl } = props.bizData;
@@ -34,7 +33,6 @@ export default function ScrollBizCard(props) {
   }
 
   const distance = getDistanceFromUser(
-    // console.log("location", location)
     location.longitude,
     location.latitude,
     longitude,
