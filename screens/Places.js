@@ -91,8 +91,8 @@ export function Places({ navigation }) {
             for (const id of ids) {
                 console.log(id);
                 
-                response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`);
-                responseJson = await response.json();
+                const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`);
+                const responseJson = await response.json();
                 console.log("res", responseJson)
                 // const result = responseJson.result;
                 const photo = responseJson.result?.photos?.[0];
@@ -149,6 +149,9 @@ export function Places({ navigation }) {
                 setLocationData(data);
                 setLoading(false);
                 console.log("done", locationData);
+            }
+            else {
+                setLocationData(null)
             }
         }
             

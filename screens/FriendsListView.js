@@ -11,15 +11,9 @@ function onDetailsButtonPressed() {
   console.log("checked in");
 }
 
-function handleReadData(user) {
-    readData(user).then((val) => {
-        return val
-    });
-    // return ret;
-}
-
 export function FriendsListView({ navigation }) {
     const [friendsData, setFriendsData] = useState(null);
+    const [loading, setLoading] = useState(true);
     let user = getUserVariable();
     if (!user) {
         return (
@@ -35,40 +29,111 @@ export function FriendsListView({ navigation }) {
             readData();
           }, []);
 
-        function readData() {
-            console.log("Reading data...")
-            const starCountRef = ref(db, `users/${user.uid}/friends`);
-            let out = [];
-            onValue(starCountRef, (snapshot) => {
-                const data = snapshot.val();
-                // delete data['canAddFriends']
-                if (data) {
-                currentFriends = Object.keys(data)
-                // console.log(data)
+        const getFriends = async () => {
+          console.log("getFriends")
+          const starCountRef = ref(db, `users/${user.uid}/friends`);
+          let out = [];
+          onValue(starCountRef, (snapshot) => {
+              const data = snapshot?.val();
+              if(data) {
+                  const keys = Object.keys(data)
+                  keys.map((key, index) => {
+                      out.push(key)
+                  });
+              }
+          });
+          console.log("getFriends", out)
+          return out;
+      }
 
-                console.log("Retrieve friends...")
-                currentFriends.map((key, idx) => {
-                    // console.log(data[key])
-                    let tempRef = ref(db, `users/${key}`);
+      const getFriendFromID = async (id) => {
+        console.log("Retrieve info on friend", id)
+        let tempRef = ref(db, `users/${key}`);
+        let data = null;
+        onValue(tempRef, (snapshotFriend) => {
+          const friend = snapshotFriend.val();
+          if(friend) {
+              // console.log(friend)
+              data = {
+                id: friend['name'],
+                lastAct: new Date(friend['lastAct'])
+              }
+              console.log(data)
+            }
+          });
+        return(data)
+      }
+
+      const getData = async (ids) => {
+        console.log("Retrieve friends...")
+        let out = []
+        for (key of ids) {
+            // console.log(data[key])
+            let data = await getFriendFromID(key)
+            out.push(data)
+        };
+        console.log("friends retrieved", out)
+        return out;
+      }
+
+
+      const readData = async () => {
+        console.log("Reading data...")
+        const friendIDs = await getFriends();
+        console.log("friendIDs", friendIDs)
+        
+        if(friendIDs.length > 0) {
+          console.log("ids", friendIDs.length)
+          const data = await getData(friendIDs);
+          console.log("got data", data)
+          
+          setFriendsData(data);
+          setLoading(false);
+          console.log("done", friendsData);
+      }
+      else {
+        setFriendsData(null)
+        setLoading(false);
+      }
+      }
+
+        // async function readData() {
+        //     console.log("Reading data...")
+        //     const starCountRef = ref(db, `users/${user.uid}/friends`);
+        //     let out = [];
+        //     onValue(starCountRef, (snapshot) => {
+        //         const data = snapshot.val();
+        //         // delete data['canAddFriends']
+        //         if (data) {
+        //         currentFriends = Object.keys(data)
+        //         // console.log(data)
+
+        //         console.log("Retrieve friends...")
+        //         for (key in currentFriends) {
+        //             // console.log(data[key])
+        //             let tempRef = ref(db, `users/${key}`);
                     
-                    onValue(tempRef, (snapshotFriend) => {
-                        const friend = snapshotFriend.val();
-                        if(friend) {
-                            // console.log(friend)
-                            console.log([friend['name'], new Date(friend['lastAct'])])
-                            out.push({
-                              id: friend['name'],
-                              lastAct: new Date(friend['lastAct'])})
-                        }
-                    });
-                });
-                console.log(out);
-                setFriendsData(out);
-                }
-            });
-        }
+        //             onValue(tempRef, (snapshotFriend) => {
+        //                 const friend = snapshotFriend.val();
+        //                 if(friend) {
+        //                     // console.log(friend)
+        //                     console.log([friend['name'], new Date(friend['lastAct'])])
+        //                     out.push({
+        //                       id: friend['name'],
+        //                       lastAct: new Date(friend['lastAct'])})
+        //                 }
+        //             });
+        //         };
+        //       }
+        //     });
+        //     // const val = await out;
+        //     console.log("out here", out);
+        //     return out;
+        //     // setFriendsData(out);
+        //     // setLoading(false);
+        // }
         // const currTime = new Date();
-        if (!friendsData)
+        if (!friendsData || friendsData.length == 0)
         {
             return (
             <View style={styles.container}>
@@ -83,13 +148,21 @@ export function FriendsListView({ navigation }) {
             </View>
             )
         }
-        // console.log("not null")
-        // console.log(friendsData.length)
+        if (loading)
+        {
+          return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+            )
+        }
+        console.log("not null")
+        console.log(friendsData)
 
         const activityList = friendsData.map((dataEntry) =>
-            <HStack key={dataEntry.id} justifyContent="space-between" alignItems="center" rounded="xl" w="100%" h={60} bg="#333333" p={2}>
-                <Text fontSize="md" color="#FFFFFF"> {dataEntry.id} </Text>
-                <Text italic fontSize="md" color="#FFFFFF">{getTimeDiff(dataEntry.lastAct)}</Text>
+            <HStack key={dataEntry?.id} justifyContent="space-between" alignItems="center" rounded="xl" w="100%" h={60} bg="#333333" p={2}>
+                <Text fontSize="md" color="#FFFFFF"> {dataEntry?.id} </Text>
+                <Text italic fontSize="md" color="#FFFFFF">{getTimeDiff(dataEntry?.lastAct)}</Text>
                 <Button bg="#B6E13D" rounded="2xl">
                     <Text fontSize="md" color="#FFFFFF">
                         Details
