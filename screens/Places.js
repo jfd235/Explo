@@ -5,6 +5,7 @@ import { set, ref, onValue, query, equalTo, orderByChild} from "firebase/databas
 import { db } from "../firebaseConfig";
 import { getUserVariable } from '../UserContext';
 import { getTimeDiff } from '../utils';
+import { MAPS_CONFIG } from '../constants';
 
 
 function onDetailsButtonPressed() {
@@ -82,7 +83,7 @@ export function Places({ navigation }) {
         }
 
         const test = async (id) => {
-            return await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`);
+            return await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${MAPS_CONFIG.API_KEY}`);
         }
 
         const getData = async (ids) => {
@@ -91,7 +92,7 @@ export function Places({ navigation }) {
             for (const id of ids) {
                 console.log(id);
                 
-                const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`);
+                const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${MAPS_CONFIG.API_KEY}`);
                 const responseJson = await response.json();
                 console.log("res", responseJson)
                 // const result = responseJson.result;
@@ -99,7 +100,7 @@ export function Places({ navigation }) {
                 const result = {
                     ...responseJson.result,
                     photoUrl: photo
-                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                    ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${MAPS_CONFIG.API_KEY}`
                     : undefined,
                     reviews: responseJson.result.reviews,
                     formatted_phone_number: responseJson.result.formatted_phone_number,
@@ -181,14 +182,14 @@ export function Places({ navigation }) {
         //                 //     }
         //                 // });
         //                 fetch(
-        //                 `https://maps.googleapis.com/maps/api/place/details/json?place_id=${key}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+        //                 `https://maps.googleapis.com/maps/api/place/details/json?place_id=${key}&key=${MAPS_CONFIG.API_KEY}`
         //                 ).then((response) => response.json())
         //                 .then((responseJson) => {
         //                 const photo = responseJson.result?.photos?.[0];
         //                 const result = {
         //                     ...responseJson.result,
         //                     photoUrl: photo
-        //                     ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+        //                     ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${MAPS_CONFIG.API_KEY}`
         //                     : undefined,
         //                     reviews: responseJson.result.reviews,
         //                     formatted_phone_number: responseJson.result.formatted_phone_number,

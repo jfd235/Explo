@@ -30,6 +30,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { db } from "../firebaseConfig";
 import { ref, push, set, onValue } from "firebase/database";
 import { getUserVariable } from "../UserContext";
+import { MAPS_CONFIG } from '../constants';
 
 export function MapScreen({ navigation, route }) {
   const isFocused = useIsFocused();
@@ -230,7 +231,7 @@ export function MapScreen({ navigation, route }) {
                     const userName = snapshotName.val()["name"];
                     console.log("found name", userName);
                     fetch(
-                      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${locationKey}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${locationKey}&key=${MAPS_CONFIG.API_KEY}}`
                     )
                       .then((response) => response.json())
                       .then((responseJson) => {
@@ -238,7 +239,7 @@ export function MapScreen({ navigation, route }) {
                         const result = {
                           ...responseJson.result,
                           photoUrl: photo
-                            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${MAPS_CONFIG.API_KEY}`
                             : undefined,
                           reviews: responseJson.result.reviews,
                           formatted_phone_number:
@@ -284,7 +285,7 @@ export function MapScreen({ navigation, route }) {
     const fetchData = () => {
       const { latitude, longitude } = coordinates;
       fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=800&type=restaurant&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=800&type=restaurant&key=${MAPS_CONFIG.API_KEY}`
       )
         .then((response) => response.json())
         .then((responseJson) => {
@@ -292,14 +293,14 @@ export function MapScreen({ navigation, route }) {
           const promises = responseJson.results.map(async (restaurant) => {
             try {
               const response = await fetch(
-                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=name,photo,formatted_phone_number,website,reviews,price_level,rating&key=${MAPS_CONFIG.API_KEY}`
               );
               const detailsJson = await response.json();
               const photo = detailsJson.result?.photos?.[0];
               return {
                 ...restaurant,
                 photoUrl: photo
-                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs`
+                  ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${MAPS_CONFIG.API_KEY}`
                   : undefined,
                 reviews: detailsJson.result.reviews,
                 formatted_phone_number:

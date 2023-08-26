@@ -16,6 +16,7 @@ import {
 import StarRating from "react-native-star-rating-widget";
 import ReviewCard from "../components/ReviewCard";
 import { Linking } from "react-native";
+import { MAPS_CONFIG } from '../constants';
 
 function onCheckinButtonPressed(navigation, bizData) {
   console.log("checked in");
@@ -50,7 +51,7 @@ export function BizDetail({ navigation, route }) {
           address: "422 Geary Street, San Francisco",
           id: "ChIJZ3qrUY6AhYARCmurUXI6SNA",
           imgUrl:
-            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=AZose0kuHeTua3KQIYDjWfMdQgI0hnWf-BAbFKa2mH7V9smCAWeeOZtM-uCMAvOyFbMeWfxDrMv3Xm6F7Q1q_zz9VbttVe2w6mBPzx-uhiNhUMDY8b5Nt5U35MotG2bL_U89RgPa9NT5NUInuGZNrcZRg2YYghJdXK8xuoSqWEoLrCAWO3U2&key=AIzaSyCXSbWuRHfBBAW26WZ_Abhvq7l5QLPMjvs",
+            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=AZose0kuHeTua3KQIYDjWfMdQgI0hnWf-BAbFKa2mH7V9smCAWeeOZtM-uCMAvOyFbMeWfxDrMv3Xm6F7Q1q_zz9VbttVe2w6mBPzx-uhiNhUMDY8b5Nt5U35MotG2bL_U89RgPa9NT5NUInuGZNrcZRg2YYghJdXK8xuoSqWEoLrCAWO3U2&key=${MAPS_CONFIG.API_KEY}",
           location: { latitude: 37.7872028, longitude: -122.4104472 },
           name: "Katana Ya",
           reviews: [
