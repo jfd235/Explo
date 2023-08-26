@@ -1,4 +1,9 @@
 # Explo
+| ![Expo Logo](assets/explo.png?raw=true "Expo Logo") | ![Avocado](assets/avocado.png?raw=true "Avocado") |
+| --------------------------------------------------- | ------------------------------------------------- |   
+### Reimagining the way people explore their local communities.
+Explo is a social network where users can see where their connections have been and the experiences they had, providing them with personal and trustworthy sources of information to take the guesswork out of finding amazing new places.  
+***Where to next?***
 ## Dependencies
 Expo:  
 ```
