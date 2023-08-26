@@ -45,6 +45,5 @@ In Explo main directory, run:
 npx react-native run-ios
 ```
 
-More instructions coming :P  
 See https://reactnative.dev/docs/environment-setup?guide=quickstart  
 under "Expo Go Quickstart" for help
